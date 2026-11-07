@@ -2,14 +2,14 @@
   --bg: #f2f6fc; --surface: #ffffff; --text: #0e1a2e; --muted: #53647d; --border: #d3deee;
   --accent: #1d4ed8; --accent-fg: #ffffff;
   --ok: #0b7a6f; --ok-bg: #dcf5f1;
-  --bad: #a85a00; --bad-bg: #fff1d6; /* amber, deliberately not red */
+  --bad: #9c0006; --bad-bg: #ffc7ce; /* Excel-style wrong: dark red on light red */
   --shadow: 0 1px 3px rgba(15,40,90,.10);
 }
 :root[data-theme='dark'] {
   --bg: #08111f; --surface: #101c31; --text: #e7effc; --muted: #93a6c4; --border: #22344f;
   --accent: #5b9bff; --accent-fg: #06101f;
   --ok: #5eead4; --ok-bg: #0b2e2d;
-  --bad: #fbbf24; --bad-bg: #33260a;
+  --bad: #ff9aa2; --bad-bg: #4a1519;
   --shadow: none;
 }
 * { box-sizing: border-box; }
@@ -112,3 +112,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .opt .mark { margin-left: auto; font-weight: 700; flex: none; }
 .opt.right .key, .opt.bad .key { border-color: currentColor; }
 .opt.bad { border-style: dashed; } /* wrong answers are also marked by a dashed border and ✗, not by colour alone */
+
+.tracker { max-width: none; margin: 0 0 16px; padding: 14px 18px; }
+.tracker h2 { font-size: 1rem; margin: 0 0 8px; }
+.tally { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin: 0; }
+.tally .btn { margin-left: auto; }
+.t-ok { color: var(--ok); } .t-bad { color: var(--bad); }

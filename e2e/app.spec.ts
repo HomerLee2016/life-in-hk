@@ -185,8 +185,8 @@ test('All questions tab: full table, filters, search, language, no horizontal sc
   await page.goto('./');
   await page.locator('#tab-questions').click();
   await expect(page.locator('#tab-questions')).toHaveAttribute('aria-selected', 'true');
-  await expect(page.locator('#qtable tbody tr')).toHaveCount(444);
-  await expect(page.locator('#qcount')).toContainText('444');
+  await expect(page.locator('#qtable tbody tr')).toHaveCount(449);
+  await expect(page.locator('#qcount')).toContainText('449');
   await shot(page, 'questions', info);
 
   await page.locator('#q-quiz').selectOption('7');
@@ -224,23 +224,59 @@ test('quizzes mix topics and show a topic tag', async ({ page }) => {
   expect(topics.size).toBeGreaterThanOrEqual(8);
 });
 
-test('no lantern logo and no red in the theme (accent is blue, wrong answers are amber)', async ({ page }) => {
+test('no lantern logo, blue accent, wrong answers red with ✗ and a dashed border', async ({ page }) => {
   await page.goto('./#/tests/1');
   expect(await page.locator('body').innerText()).not.toContain('🏮');
   await expect(page.locator('.logo')).toHaveCount(0);
   const rgb = (s: string) => s.match(/\d+/g)!.slice(0, 3).map(Number);
   const accent = rgb(await page.evaluate(() => getComputedStyle(document.querySelector('.tabs a[aria-selected="true"]')!).color));
   expect(accent[2]).toBeGreaterThan(accent[0]); // blue > red
-  // Answer wrong on purpose: find the wrong option by answering the first, and if it was right, pick another question.
   for (let i = 0; i < 24; i++) {
     await page.locator('button.opt').first().click();
     if (await page.locator('button.opt.bad').count()) break;
     await page.locator('#next').click();
   }
   const bad = rgb(await page.evaluate(() => getComputedStyle(document.querySelector('button.opt.bad')!).borderTopColor));
-  expect(bad[0]).toBeGreaterThan(bad[2]); // warm (amber)
-  expect(bad[1]).toBeGreaterThan(bad[2]);
-  expect(bad[1] / bad[0]).toBeGreaterThan(0.45); // green channel present => amber/orange, not red
+  expect(bad[0]).toBeGreaterThan(bad[1] + 40); // red-ish
+  expect(bad[0]).toBeGreaterThan(bad[2] + 40);
   await expect(page.locator('button.opt.bad .mark')).toHaveText('✗');
   await expect(page.locator('button.opt.right .mark')).toHaveText('✓');
+});
+
+test('tests cards have no description; tracker counts answers, shows in table, and resets', async ({ page }) => {
+  await page.goto('./#/tests');
+  await expect(page.locator('.card p')).toHaveCount(0);
+  await expect(page.locator('#tracker')).toContainText(/No answers yet|未有記錄/);
+  await page.locator('[data-test="1"]').click();
+  await page.locator('button.opt').first().click();
+  await page.locator('#next').click();
+  await page.locator('button.opt').first().click();
+  await page.goto('./#/tests');
+  const c = Number(await page.locator('#stat-correct b').innerText());
+  const w = Number(await page.locator('#stat-wrong b').innerText());
+  expect(c + w).toBe(2);
+  await page.goto('./#/questions');
+  await expect(page.locator('td.mine:not(:has-text("—"))')).toHaveCount(2);
+  await page.goto('./#/tests');
+  page.once('dialog', (d) => d.accept());
+  await page.locator('#stats-reset').click();
+  await expect(page.locator('#tracker')).toContainText(/No answers yet|未有記錄/);
+});
+
+test('options shown belong to the question shown (shuffled session stays consistent)', async ({ page }) => {
+  await page.goto('./#/tests/5');
+  for (let i = 0; i < 3; i++) {
+    const q = (await page.locator('#question').innerText()).trim();
+    const opts = (await page.locator('button.opt > span:nth-child(2)').allInnerTexts()).map((x) => x.trim());
+    await page.locator('button.opt').first().click();
+    const why = (await page.locator('.feedback p').innerText()).trim();
+    // Look the question up in the All questions table (shared state, same language).
+    await page.goto('./#/questions');
+    await page.locator('#q-search').fill(q);
+    const row = page.locator('#qtable tbody tr').first();
+    const text = await row.innerText();
+    for (const o of opts) expect(text).toContain(o);
+    expect(text).toContain(why);
+    await page.goto('./#/tests/5');
+  }
 });

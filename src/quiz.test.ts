@@ -104,3 +104,20 @@ describe('edge cases (review findings)', () => {
     expect(answeredCount(s)).toBe(0);
   });
 });
+
+import { recordAnswer, sanitizeStats, statTotals } from './quiz';
+describe('answer stats', () => {
+  it('sanitizes junk', () => {
+    expect(sanitizeStats(null)).toEqual({});
+    expect(sanitizeStats([1])).toEqual({});
+    expect(sanitizeStats({ a: { c: 2, w: -1 }, b: 'x', c: { c: 0, w: 0 } })).toEqual({ a: { c: 2, w: 0 } });
+  });
+  it('records and totals', () => {
+    let s = recordAnswer({}, 'q1', true);
+    s = recordAnswer(s, 'q1', false);
+    s = recordAnswer(s, 'q2', true);
+    expect(s.q1).toEqual({ c: 1, w: 1 });
+    expect(statTotals(s)).toEqual({ correct: 2, wrong: 1, pct: 67 });
+    expect(statTotals({}).pct).toBeNull();
+  });
+});

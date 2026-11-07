@@ -77,6 +77,33 @@ export function save(key: string, value: unknown): void {
   }
 }
 
+/** Lifetime per-question tally: c = times answered correctly, w = times answered wrong. */
+export type Stats = Record<string, { c: number; w: number }>;
+
+export function sanitizeStats(raw: unknown): Stats {
+  const out: Stats = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
+  for (const [id, v] of Object.entries(raw as Record<string, unknown>)) {
+    const r = v as { c?: unknown; w?: unknown } | null;
+    const c = r && Number.isInteger(r.c) && (r.c as number) >= 0 ? (r.c as number) : 0;
+    const w = r && Number.isInteger(r.w) && (r.w as number) >= 0 ? (r.w as number) : 0;
+    if (c + w > 0) out[id] = { c, w };
+  }
+  return out;
+}
+
+export function recordAnswer(stats: Stats, id: string, correct: boolean): Stats {
+  const cur = stats[id] ?? { c: 0, w: 0 };
+  return { ...stats, [id]: { c: cur.c + (correct ? 1 : 0), w: cur.w + (correct ? 0 : 1) } };
+}
+
+export function statTotals(stats: Stats): { correct: number; wrong: number; pct: number | null } {
+  let correct = 0, wrong = 0;
+  for (const v of Object.values(stats)) { correct += v.c; wrong += v.w; }
+  const n = correct + wrong;
+  return { correct, wrong, pct: n === 0 ? null : Math.round((correct / n) * 100) };
+}
+
 export type Bests = Record<number, number>;
 
 /** Keep only entries with an integer test id 1..17 and an integer score 0..24; anything else is dropped. */
