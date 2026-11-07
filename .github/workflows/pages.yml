@@ -1,5 +1,9 @@
 name: CI and deploy to GitHub Pages
 
+# Pull requests: test + build + e2e only.
+# Push to main (or manual run on main): the same, then deploy to GitHub Pages.
+# Requires Settings → Pages → Build and deployment → Source: GitHub Actions.
+
 on:
   push:
     branches: [main]
@@ -11,11 +15,12 @@ permissions:
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,7 +34,17 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           npm run e2e
+      - name: Upload Playwright screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots
+          if-no-files-found: ignore
+      - uses: actions/configure-pages@v5
+        if: github.ref == 'refs/heads/main'
       - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           path: dist
 
