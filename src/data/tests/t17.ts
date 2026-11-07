@@ -1,0 +1,33 @@
+import { defineTest } from '../../quiz';
+
+export default defineTest({
+  id: 17,
+  title: ['日常生活（二）：工作、金錢與義工', 'Everyday Life II: Work, Money and Volunteering'],
+  blurb: ['強積金、聯繫匯率、公益金與守望相助。', 'The MPF, the peg, the Community Chest and mutual help.'],
+  qs: [
+    [["法定最低工資於哪年實施，首次時薪是多少？", "When did the statutory minimum wage start, and at what hourly rate?"], ["2011 年，28 港元", "2011, HK$28 an hour"], [["1997 年，100 港元", "1997, HK$100"], ["1949 年，1 港元", "1949, HK$1"], ["2023 年，500 港元", "2023, HK$500"]], ["其後定期檢討調整。", "It is reviewed and adjusted periodically."]],
+    [["強積金（MPF）於哪年開始實施？", "In which year did the Mandatory Provident Fund start?"], "2000", ["1949", "1967", "1997"], ["僱主與僱員各供款。", "Both employer and employee contribute."]],
+    [["強積金供款比率一般是？", "What is the usual MPF contribution rate?"], ["僱主與僱員各 5%（設上限）", "5% each from employer and employee (capped)"], [["全部由僱員支付 50%", "50% from the employee"], ["完全免費", "Free"], ["只由政府供款", "Government only"]], ["每月上限為 1,500 港元。", "Capped at HK$1,500 a month."]],
+    [["公務員五天工作周於哪年實施？", "In which year did civil servants begin a five-day week?"], "2006", ["1949", "1967", "1997"], ["私營機構情況各異。", "Private firms vary."]],
+    [["男性僱員法定侍產假現為多少天？", "How many days of statutory paternity leave do employees get?"], ["5 天", "5 days"], [["0 天", "None"], ["30 天", "30 days"], ["365 天", "365 days"]], ["2015 年起實施。", "In force since 2015."]],
+    [["法定產假現為多少星期？", "How many weeks of statutory maternity leave are there?"], ["14 星期", "14 weeks"], [["1 星期", "1 week"], ["4 星期", "4 weeks"], ["52 星期", "52 weeks"]], ["2020 年由十週增至十四週。", "Raised from ten to fourteen weeks in 2020."]],
+    [["在職滿一年的僱員，法定有薪年假最少為？", "Minimum paid annual leave after one year's service?"], ["7 天", "7 days"], [["1 天", "1 day"], ["30 天", "30 days"], ["60 天", "60 days"]], ["年資越長，假期越多，上限 14 天。", "Rising with service, up to 14 days."]],
+    [["颱風及暴雨期間，政府鼓勵僱主怎樣做？", "During typhoons and rainstorms, what does the government encourage employers to do?"], ["制定惡劣天氣上班安排，顧及員工安全", "Set adverse-weather arrangements that protect staff safety"], [["要求員工冒險回公司", "Force staff to travel"], ["扣光全月薪金", "Deduct a month's pay"], ["不作任何安排", "Make no plan"]], ["2019 年起有相關《工作守則》。", "A Code of Practice has existed since 2019."]],
+    [["港元與美元聯繫匯率的區間約為？", "What is the approximate range of the HK dollar's link to the US dollar?"], ["約 7.75–7.85 港元兌 1 美元", "About HK$7.75–7.85 per US$1"], [["約 1–2", "About 1–2"], ["約 70–80", "About 70–80"], ["約 0.1–0.2", "About 0.1–0.2"]], ["2005 年起設強弱方兌換保證。", "Convertibility undertakings have applied since 2005."]],
+    [["以下哪三間銀行發行港幣鈔票？", "Which three banks issue Hong Kong banknotes?"], ["匯豐、渣打、中銀香港", "HSBC, Standard Chartered and Bank of China (HK)"], [["恒生、東亞、大新", "Hang Seng, BEA and Dah Sing"], ["花旗、美國銀行、摩根", "Citi, BofA and JPMorgan"], ["只有金管局", "HKMA only"]], ["金管局負責監管。", "The HKMA supervises."]],
+    [["金融管理局於哪年成立？", "In which year was the HKMA established?"], "1993", ["1949", "1967", "2003"], ["負責貨幣與銀行穩定。", "It looks after monetary and banking stability."]],
+    [["恒生指數於哪年開始編制？", "In which year was the Hang Seng Index launched?"], "1969", ["1841", "1949", "1997"], ["是香港股市的主要指標。", "It is the main benchmark for the stock market."]],
+    [["香港有沒有銷售稅（增值稅）？", "Does Hong Kong have a sales tax (VAT)?"], ["沒有", "No"], [["有，百分之二十", "Yes, 20%"], ["有，百分之五十", "Yes, 50%"], ["只有節日有", "Only at festivals"]], ["香港亦無資本增值稅。", "Nor is there a capital gains tax."]],
+    [["香港標準利得稅率（公司）約為多少？", "What is the standard corporate profits tax rate?"], ["16.5%", "16.5%"], [["1.65%", "1.65%"], ["65%", "65%"], ["99%", "99%"]], ["設兩級制優惠。", "There is a concessionary two-tier rate."]],
+    [["公益金創立於哪年？", "In which year was the Community Chest founded?"], "1968", ["1841", "1949", "1997"], ["每年舉辦「公益金百萬行」。", "It runs the annual 'Walk for Millions'."]],
+    [["「公益金百萬行」自哪年開始？", "From which year has the 'Walk for Millions' been held?"], "1970", ["1841", "1949", "1997"], ["市民步行籌款。", "People walk to raise funds."]],
+    [["「愛心聖誕大行動」由哪兩個機構合辦？", "Which two organisations run 'Operation Santa Claus'?"], ["香港電台與南華早報", "RTHK and the South China Morning Post"], [["TVB 與 ATV", "TVB and ATV"], ["港鐵與九巴", "MTR and KMB"], ["匯豐與渣打", "HSBC and Standard Chartered"]], ["自 1988 年起籌款。", "Fundraising since 1988."]],
+    [["香港哪個機構是最大慈善捐款機構之一？", "Which organisation is one of Hong Kong's largest charitable donors?"], ["香港賽馬會慈善信託基金", "Hong Kong Jockey Club Charities Trust"], [["港鐵", "MTR"], ["郵政署", "Post Office"], ["天文台", "Observatory"]], ["資助教育、醫療與體育。", "Funding education, healthcare and sport."]],
+    [["民安隊成立於哪年？", "In which year was the Civil Aid Service founded?"], "1952", ["1841", "1967", "2003"], ["是紀律部隊的義務力量。", "A volunteer disciplined service."]],
+    [["香港義工運動始於哪年？", "In which year was the Volunteer Movement launched in Hong Kong?"], "1998", ["1841", "1949", "2019"], ["推動社會參與。", "It promoted community involvement."]],
+    [["國際義工日是哪天？", "When is International Volunteer Day?"], ["12 月 5 日", "5 December"], [["1 月 1 日", "1 January"], ["7 月 1 日", "1 July"], ["10 月 1 日", "1 October"]], ["聯合國訂定。", "Designated by the UN."]],
+    [["香港紅十字會的主要服務之一是？", "A main service run by the Hong Kong Red Cross is…"], ["血液捐贈服務", "The blood transfusion service"], [["賽馬", "Horse racing"], ["電影審查", "Film censorship"], ["發行鈔票", "Printing banknotes"]], ["市民定期捐血救人。", "Residents regularly donate blood to save lives."]],
+    [["颱風後見到街道有倒樹，市民守望相助的做法是？", "After a typhoon, trees block the road. What reflects Hong Kong's mutual-help spirit?"], ["通報有關部門並協助清理或提醒他人", "Report it and help clear or warn others"], [["拍照後走開", "Take a photo and walk on"], ["把樹搬到別人門口", "Move it to someone's door"], ["推給鄰居", "Blame a neighbour"]], ["守望相助是獅子山精神之一。", "Helping each other is a core Lion Rock value."]],
+    [["成年人在香港申請身份證，需要年滿多少歲？", "At what age must Hong Kong residents register for an identity card?"], "11", ["1", "30", "65"], ["11 歲須登記，18 歲換領成人身份證。", "Registration at 11; a new card at 18."]],
+  ],
+});

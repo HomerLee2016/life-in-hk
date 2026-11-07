@@ -1,0 +1,33 @@
+import { defineTest } from '../../quiz';
+
+export default defineTest({
+  id: 7,
+  title: ['九七回歸與特區早年', 'Handover and the Early SAR (1997–2012)'],
+  blurb: ['那天落雨、金融風暴、沙士與七一大遊行。', 'The rainy handover, the financial crisis, SARS and the July 1 march.'],
+  qs: [
+    [["香港主權移交儀式在哪一天舉行？", "On what date did the handover of sovereignty take place?"], ["1997 年 7 月 1 日（6 月 30 日午夜）", "1 July 1997 (midnight on 30 June)"], [["1984 年 12 月 19 日", "19 December 1984"], ["1989 年 6 月 4 日", "4 June 1989"], ["2047 年 7 月 1 日", "1 July 2047"]], ["香港由英國交還中國。", "Hong Kong passed from Britain to China."]],
+    [["回歸儀式當晚的天氣如何？", "What was the weather like during the handover ceremony?"], ["下大雨", "Heavy rain"], [["萬里無雲", "Cloudless"], ["颱風信號十號", "Typhoon signal No. 10"], ["下雪", "Snow"]], ["「九七回歸那晚落雨」成為港人共同記憶。", "'It rained that night' became a shared Hong Kong memory."]],
+    [["香港末代總督是誰？", "Who was Hong Kong's last Governor?"], ["彭定康", "Chris Patten"], [["尤德", "Edward Youde"], ["麥理浩", "Murray MacLehose"], ["董建華", "Tung Chee-hwa"]], ["彭定康與查爾斯王子乘「不列顛尼亞號」離港。", "Patten and Prince Charles left aboard HMY Britannia."]],
+    [["首任行政長官是誰？", "Who was the first Chief Executive?"], ["董建華", "Tung Chee-hwa"], [["曾蔭權", "Donald Tsang"], ["梁振英", "C.Y. Leung"], ["林鄭月娥", "Carrie Lam"]], ["董建華任期 1997–2005。", "Tung served 1997–2005."]],
+    [["回歸後香港防務由哪支部隊負責？", "Which force took over Hong Kong's defence after the handover?"], ["中國人民解放軍駐港部隊", "The PLA Hong Kong Garrison"], [["皇家海軍", "The Royal Navy"], ["香港警察", "Hong Kong Police"], ["聯合國維和部隊", "UN peacekeepers"]], ["《基本法》規定外交與國防由中央負責。", "The Basic Law gives the central government foreign affairs and defence."]],
+    [["特區區旗與區徽上的花是甚麼？", "Which flower appears on the SAR flag and emblem?"], ["洋紫荊", "Bauhinia (orchid tree)"], [["玫瑰", "Rose"], ["牡丹", "Peony"], ["蓮花", "Lotus"]], ["洋紫荊是香港市花。", "Bauhinia is Hong Kong's floral emblem."]],
+    [["八達通卡於哪一年推出？", "In which year was the Octopus card launched?"], "1997", ["1979", "1989", "2003"], ["1997 年 9 月啟用。", "It launched in September 1997."]],
+    [["1997 年中爆發的哪場危機衝擊香港？", "Which crisis, beginning in mid-1997, hit Hong Kong?"], ["亞洲金融風暴", "The Asian financial crisis"], [["全球疫症", "A global pandemic"], ["石油危機", "The oil crisis"], ["科網熱潮", "The dot-com boom"]], ["港元受衝擊，樓價與股市大跌。", "The HK dollar was attacked and property and stocks fell."]],
+    [["1998 年 8 月，政府為捍衞港元入市買了甚麼？", "In August 1998 the government intervened to defend the currency by buying what?"], ["港股", "Hong Kong shares"], [["黃金", "Gold"], ["石油", "Oil"], ["比特幣", "Bitcoin"]], ["入市金額約 1,180 億港元。", "The intervention was worth about HK$118 billion."]],
+    [["赤鱲角新機場於哪一年啟用？", "In which year did the Chek Lap Kok airport open?"], "1998", ["1979", "1989", "2003"], ["啟德機場同日關閉。", "Kai Tak closed that same day."]],
+    [["1997 年底為遏止哪種疫症而撲殺大批雞隻？", "Which disease led to a mass poultry cull at the end of 1997?"], ["禽流感（H5N1）", "Bird flu (H5N1)"], [["腳氣病", "Beriberi"], ["瘧疾", "Malaria"], ["天花", "Smallpox"]], ["約 130 萬隻雞被撲殺。", "About 1.3 million birds were culled."]],
+    [["2003 年沙士在香港造成約多少人死亡？", "About how many people died of SARS in Hong Kong in 2003?"], ["約 300 人", "About 300"], [["約 3 人", "About 3"], ["約 30 人", "About 30"], ["約 3,000 人", "About 3,000"]], ["本港共有 1,755 宗確診，299 人死亡。", "Hong Kong had 1,755 cases and 299 deaths."]],
+    [["沙士期間哪個屋苑爆發大規模群組感染？", "Which housing estate had a major SARS cluster?"], ["淘大花園", "Amoy Gardens"], [["美孚新邨", "Mei Foo Sun Chuen"], ["太古城", "Taikoo Shing"], ["黃埔花園", "Whampoa Garden"]], ["淘大 E 座成為重災區。", "Block E became the hotspot."]],
+    [["2003 年 7 月 1 日的大遊行主要反對甚麼？", "What was the main target of the 1 July 2003 march?"], ["《基本法》第二十三條立法", "Article 23 national security legislation"], [["電車加價", "Tram fare rises"], ["颱風假取消", "Cancelling typhoon holidays"], ["禁煙令", "A smoking ban"]], ["約 50 萬人參加（主辦單位數字）。", "About 500,000 took part, according to organisers."]],
+    [["2003 年遊行後，二十三條立法有何結果？", "What happened to the Article 23 bill after the 2003 march?"], ["政府擱置條例草案", "The government shelved the bill"], [["即日三讀通過", "It passed at once"], ["交英國審批", "It went to Britain for approval"], ["改為公投通過", "It passed by referendum"]], ["保安局局長葉劉淑儀其後辭職。", "Security Secretary Regina Ip later resigned."]],
+    [["2003 年簽署、深化內地與香港經貿的安排叫甚麼？", "What trade arrangement between the mainland and Hong Kong was signed in 2003?"], ["更緊密經貿關係安排（CEPA）", "CEPA (Closer Economic Partnership Arrangement)"], [["北美自由貿易協定", "NAFTA"], ["跨太平洋夥伴協定", "TPP"], ["歐盟協議", "EU treaty"]], ["同年亦開放自由行。", "Individual visits by mainlanders were also opened that year."]],
+    [["董建華 2005 年辭職後，誰接任行政長官？", "Who succeeded Tung Chee-hwa after he resigned in 2005?"], ["曾蔭權", "Donald Tsang"], [["梁振英", "C.Y. Leung"], ["林鄭月娥", "Carrie Lam"], ["李家超", "John Lee"]], ["曾蔭權先完成餘下任期，再於 2007 年連任。", "Tsang finished the term and won again in 2007."]],
+    [["香港迪士尼樂園於哪一年開幕？", "In which year did Hong Kong Disneyland open?"], "2005", ["1979", "1989", "1997"], ["樂園位於大嶼山。", "The park is on Lantau Island."]],
+    [["1999 年人大常委會首次釋法，涉及哪個議題？", "The NPCSC's first interpretation of the Basic Law in 1999 concerned what issue?"], ["居港權", "Right of abode"], [["選舉", "Elections"], ["教育語言", "Language of instruction"], ["稅制", "Taxation"]], ["釋法推翻了終審法院的部分裁決效果。", "It overturned part of the effect of a Court of Final Appeal ruling."]],
+    [["2006–07 年保衞天星碼頭與皇后碼頭運動關乎甚麼？", "What was at stake in the 2006–07 Star Ferry and Queen's Pier campaigns?"], ["集體回憶與歷史建築保育", "Collective memory and heritage preservation"], [["足球場興建", "A football stadium"], ["賭場牌照", "Casino licences"], ["考試改革", "Exam reform"]], ["保育意識自此抬頭。", "Heritage awareness grew from then on."]],
+    [["2010 年菲律賓人質事件中，多少名香港旅客遇害？", "How many Hong Kong tourists died in the 2010 Manila hostage crisis?"], "8", ["1", "20", "100"], ["事件於 8 月 23 日發生。", "It happened on 23 August."]],
+    [["1998 年首屆特區立法會選舉投票率約為多少？", "Roughly what was the turnout in the first SAR LegCo election in 1998?"], ["約 53%", "About 53%"], [["約 5%", "About 5%"], ["約 15%", "About 15%"], ["約 99%", "About 99%"]], ["投票率創當時新高。", "It was a record at the time."]],
+    [["回歸時，《基本法》於哪天起實施？", "On what date did the Basic Law take effect?"], ["1997 年 7 月 1 日", "1 July 1997"], [["1990 年 4 月 4 日", "4 April 1990"], ["1984 年 12 月 19 日", "19 December 1984"], ["2003 年 7 月 1 日", "1 July 2003"]], ["1990 年頒布，1997 年實施。", "Promulgated 1990, effective 1997."]],
+    [["回歸後特區行政長官任期為多少年？", "How long is a Chief Executive's term?"], ["五年", "Five years"], [["一年", "One year"], ["十年", "Ten years"], ["終身", "For life"]], ["最多可連任一次。", "At most two consecutive terms."]],
+  ],
+});

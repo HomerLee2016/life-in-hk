@@ -1,0 +1,33 @@
+import { defineTest } from '../../quiz';
+
+export default defineTest({
+  id: 16,
+  title: ['日常生活（一）：教育、醫療與民生', 'Everyday Life I: Education, Health and Living'],
+  blurb: ['學制、醫院管理局、交通與房屋。', 'Schools, the Hospital Authority, transport and housing.'],
+  qs: [
+    [["香港中學文憑試（DSE）首次舉行於哪年？", "In which year was the HKDSE first held?"], "2012", ["1949", "1978", "1997"], ["新學制「三三四」取代舊制會考與高考。", "The '3+3+4' system replaced the old HKCEE and A-levels."]],
+    [["香港提供多少年免費基礎教育？", "How many years of free basic education does Hong Kong provide?"], ["12 年", "12 years"], [["3 年", "3 years"], ["6 年", "6 years"], ["20 年", "20 years"]], ["2008/09 學年起由九年增至十二年。", "Extended from nine to twelve years from 2008/09."]],
+    [["九年免費強迫教育始於哪年？", "When did nine years of free, compulsory education start?"], "1978", ["1949", "1967", "1997"], ["初中三年強迫入學。", "Including three compulsory junior secondary years."]],
+    [["香港中文大學成立於哪年？", "In which year was the Chinese University of Hong Kong founded?"], "1963", ["1911", "1991", "2003"], ["由新亞、崇基、聯合組成。", "Formed from New Asia, Chung Chi and United colleges."]],
+    [["香港科技大學成立於哪年？", "In which year was HKUST founded?"], "1991", ["1911", "1963", "2003"], ["位於清水灣。", "It is located in Clear Water Bay."]],
+    [["本地學生透過哪個機制以 DSE 成績申請大學？", "Which system do local students use to apply to universities with DSE results?"], ["大學聯合招生辦法（JUPAS）", "JUPAS"], [["UCAS", "UCAS"], ["高考", "Gaokao"], ["SAT", "SAT"]], ["JUPAS 為統一申請平台。", "JUPAS is a unified application platform."]],
+    [["哪年起推行幼稚園教育計劃，資助幼稚園學費？", "From which year did the Kindergarten Education Scheme subsidise fees?"], "2017", ["1949", "1967", "1997"], ["提供免費優質幼稚園教育。", "It offers free quality kindergarten places."]],
+    [["1998 年推行「母語教學」的主要目的是？", "What was the aim of the 1998 mother-tongue teaching policy?"], ["多數中學以中文授課，提升學習效果", "Most secondary schools teach in Chinese for better learning"], [["全部改用法語", "Switch to French"], ["取消英文", "Abolish English"], ["取消考試", "Abolish exams"]], ["之後也容許部分學校用英語。", "Some schools could keep English instruction."]],
+    [["哪個機構管理香港公立醫院？", "Which body runs Hong Kong's public hospitals?"], ["醫院管理局", "Hospital Authority"], [["香港賽馬會", "Jockey Club"], ["港鐵公司", "MTR Corporation"], ["消防處", "Fire Services"]], ["1990 年成立。", "Established in 1990."]],
+    [["香港緊急求助電話是？", "What is Hong Kong's emergency number?"], "999", ["911", "112", "000"], ["警、消、救護均撥 999。", "Police, fire and ambulance via 999."]],
+    [["醫健通／長者醫療券計劃主要補貼誰？", "Who does the Elderly Health Care Voucher Scheme mainly subsidise?"], ["長者使用私營基層醫療服務", "Elderly people using private primary care"], [["遊客", "Tourists"], ["中學生", "Secondary students"], ["運動員", "Athletes"]], ["2009 年起試行，後成為恆常計劃。", "Piloted from 2009, then made permanent."]],
+    [["香港公共醫療主要由甚麼支持？", "What mainly funds Hong Kong's public healthcare?"], ["政府公帑（高度資助）", "Government funding (heavily subsidised)"], [["全部由病人自付", "Patients pay everything"], ["完全由慈善捐款", "Charity alone"], ["旅客稅", "A tourist tax"]], ["因此公立醫院收費遠低於私家。", "Public fees are far below private ones."]],
+    [["香港人預期壽命屬世界哪個水平？", "How does Hong Kong's life expectancy rank globally?"], ["屬全球最高之列", "Among the highest in the world"], [["全球最低", "Among the lowest"], ["與全球平均相同", "Exactly average"], ["低於 50 歲", "Under 50"]], ["男女平均都超過 80 歲。", "Both men and women exceed 80 on average."]],
+    [["以下哪項是中醫的正式規管機構？", "Which body regulates Chinese medicine practitioners?"], ["中醫藥管理委員會", "Chinese Medicine Council"], [["香港賽馬會", "Jockey Club"], ["地政總署", "Lands Department"], ["電影檢查辦事處", "Film Censorship"]], ["1999 年起註冊中醫。", "Registration began in 1999."]],
+    [["瑪麗醫院始建於哪年（大約）？", "Roughly when was Queen Mary Hospital built?"], "1937", ["1841", "1949", "1997"], ["位於薄扶林。", "It is in Pok Fu Lam."]],
+    [["市區的士是甚麼顏色？", "What colour are urban taxis in Hong Kong?"], ["紅色", "Red"], [["綠色", "Green"], ["黃色", "Yellow"], ["藍色", "Blue"]], ["新界為綠色，大嶼山為藍色。", "New Territories taxis are green, Lantau's are blue."]],
+    [["哪種交通工具自 1904 年起在港島行駛？", "Which transport has run on Hong Kong Island since 1904?"], ["電車", "Trams"], [["地鐵", "The MTR"], ["纜車", "Cable car"], ["磁浮列車", "Maglev"]], ["暱稱「叮叮」。", "Nicknamed 'Ding Ding'."]],
+    [["大約多少港人住在公共租住房屋？", "Roughly what share of Hongkongers live in public rental housing?"], ["約三成", "About 30%"], [["約 3%", "About 3%"], ["約 90%", "About 90%"], ["沒有人", "None"]], ["公屋由房屋委員會興建。", "Public rental flats are built by the Housing Authority."]],
+    [["香港約有多少土地劃為郊野公園？", "About how much of Hong Kong's land is country park?"], ["約四成", "About 40%"], [["約 4%", "About 4%"], ["約 90%", "About 90%"], ["零", "Zero"]], ["《郊野公園條例》1976 年訂立。", "The Country Parks Ordinance dates from 1976."]],
+    [["香港食水大部分來自哪裏？", "Where does most of Hong Kong's fresh water come from?"], ["廣東東江", "The Dongjiang River in Guangdong"], [["泰晤士河", "The Thames"], ["長江", "The Yangtze"], ["海水直接飲用", "Drinking seawater"]], ["自 1960 年代起供水。", "Supplied since the 1960s."]],
+    [["哪個天氣信號通常會令學校停課？", "Which weather warning typically suspends classes?"], ["八號或以上颱風信號／黑色暴雨", "Typhoon Signal No. 8 or above / black rainstorm"], [["一號戒備信號", "Signal No. 1"], ["黃色暴雨", "Yellow rainstorm"], ["寒冷天氣警告", "Cold weather warning"]], ["教育局會按情況通知。", "The Education Bureau announces arrangements."]],
+    [["2024 年起，通識科由甚麼科目取代？", "From 2024, Liberal Studies in the DSE was replaced by which subject?"], ["公民與社會發展科", "Citizenship and Social Development"], [["物理", "Physics"], ["體育", "Physical Education"], ["視藝", "Visual Arts"]], ["科目內容包括國情與國安。", "The curriculum includes national conditions and security."]],
+    [["香港小巴有哪兩種顏色？", "Which two colours do Hong Kong minibuses come in?"], ["紅色與綠色", "Red and green"], [["藍色與黃色", "Blue and yellow"], ["黑色與白色", "Black and white"], ["紫色與橙色", "Purple and orange"]], ["紅色小巴可自由停站，綠色為專線。", "Red minibuses stop on demand; green ones run fixed routes."]],
+    [["香港大學是香港最早的大學，位於哪區？", "Where is the University of Hong Kong located?"], ["薄扶林", "Pok Fu Lam"], [["沙田", "Sha Tin"], ["元朗", "Yuen Long"], ["大埔", "Tai Po"]], ["主校園位於港島西。", "The main campus is on western Hong Kong Island."]],
+  ],
+});

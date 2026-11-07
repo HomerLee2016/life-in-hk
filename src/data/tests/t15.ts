@@ -1,0 +1,33 @@
+import { defineTest } from '../../quiz';
+
+export default defineTest({
+  id: 15,
+  title: ['節日與公眾假期', 'Festivals and Public Holidays'],
+  blurb: ['利是、龍舟、長洲包山與假期知識。', 'Lai see, dragon boats, Bun Festival and holidays.'],
+  qs: [
+    [["農曆新年派利是，通常由誰派給誰？", "At Lunar New Year, who usually gives lai see to whom?"], ["已婚人士派給未婚者及晚輩", "Married people give to unmarried people and children"], [["未婚者派給長輩", "Singles give to the elderly"], ["只有老闆派給客人", "Bosses to customers only"], ["不派利是", "Nobody gives"]], ["也會派給管理員等服務人員。", "Also given to building staff and service workers."]],
+    [["農曆新年公眾假期通常有多少天？", "How many days is the Lunar New Year public holiday usually?"], ["三天", "Three days"], [["一天", "One day"], ["十天", "Ten days"], ["三十天", "Thirty days"]], ["初一至初三。", "Days one to three."]],
+    [["農曆新年煙花匯演通常在哪晚舉行？", "On which night is the Lunar New Year fireworks display usually held?"], ["年初二晚", "The evening of the second day"], [["除夕早上", "New Year's Eve morning"], ["年初七中午", "Noon on day seven"], ["年廿九午夜", "Midnight on day 29"]], ["在維港兩岸觀賞。", "Watched on both sides of the harbour."]],
+    [["清明節的主要習俗是？", "What is the main custom of Ching Ming?"], ["掃墓拜祭先人", "Sweeping graves and honouring ancestors"], [["放龍舟", "Racing dragon boats"], ["賞月", "Moon gazing"], ["派利是", "Giving lai see"]], ["多在 4 月初。", "Usually in early April."]],
+    [["重陽節的傳統活動是？", "A traditional Chung Yeung activity is…"], ["登高及祭祖", "Hiking up hills and honouring ancestors"], [["吃月餅", "Eating mooncakes"], ["賽龍舟", "Dragon boat racing"], ["放煙花", "Fireworks"]], ["在農曆九月初九。", "On the ninth day of the ninth lunar month."]],
+    [["端午節紀念哪位詩人？", "Which poet is commemorated at Tuen Ng?"], ["屈原", "Qu Yuan"], [["李白", "Li Bai"], ["杜甫", "Du Fu"], ["蘇軾", "Su Shi"]], ["吃糉子與賽龍舟。", "People eat zongzi and race dragon boats."]],
+    [["中秋節翌日是否公眾假期？", "Is the day after Mid-Autumn a public holiday?"], ["是（中秋節翌日）", "Yes — the day following Mid-Autumn"], [["否", "No"], ["只在當天", "Only on the day itself"], ["只有學校放假", "Schools only"]], ["中秋當日本身不是假期。", "Mid-Autumn day itself is not."]],
+    [["長洲太平清醮最著名的是？", "What is the Cheung Chau Bun Festival best known for?"], ["包山與平安包", "Bun towers and lucky buns"], [["煙花匯演", "Fireworks"], ["龍舟賽", "Boat races"], ["燈謎", "Riddles"]], ["1978 年包山倒塌後一度停辦，2005 年恢復搶包山。", "After a 1978 collapse, bun scrambling was suspended and revived in 2005."]],
+    [["盂蘭節在農曆哪個月？", "In which lunar month is the Hungry Ghost Festival?"], ["七月", "The seventh"], [["正月", "The first"], ["五月", "The fifth"], ["十二月", "The twelfth"]], ["有燒衣紙、搭神棚的習俗。", "People burn offerings and build bamboo theatres."]],
+    [["冬至在港人心中常被稱為？", "How is Winter Solstice often described by Hongkongers?"], ["冬大過年", "'Winter solstice is bigger than the New Year'"], [["春分", "Spring equinox"], ["夏至假期", "A summer holiday"], ["一般日子", "An ordinary day"]], ["很多家庭會團聚吃飯。", "Many families gather for a meal."]],
+    [["天后誕主要供奉哪位神明？", "Which deity is honoured at the Tin Hau Festival?"], ["天后（海上女神）", "Tin Hau, goddess of the sea"], [["財神", "God of wealth"], ["關公", "Guan Yu"], ["玉皇大帝", "Jade Emperor"]], ["漁民及沿海居民尤為重視。", "Fishers and coastal communities treasure it."]],
+    [["佛誕自哪年起成為香港公眾假期？", "From which year has Buddha's Birthday been a Hong Kong public holiday?"], "1998", ["1841", "1949", "2019"], ["回歸後新增的假期。", "A holiday added after the handover."]],
+    [["7 月 1 日是甚麼假期？", "What is the 1 July public holiday?"], ["香港特別行政區成立紀念日", "HKSAR Establishment Day"], [["勞動節", "Labour Day"], ["佛誕", "Buddha's Birthday"], ["國慶日", "National Day"]], ["亦是 2003 年大遊行的日子。", "Also the date of the 2003 march."]],
+    [["10 月 1 日是甚麼假期？", "What is the 1 October holiday?"], ["國慶日", "National Day"], [["重陽節", "Chung Yeung"], ["冬至", "Winter Solstice"], ["復活節", "Easter"]], ["香港亦有煙花匯演。", "There is usually a fireworks show."]],
+    [["香港每年一般有多少天公眾假期？", "How many general public holidays does Hong Kong have in a year?"], "17", ["7", "27", "37"], ["政府訂明的「公眾假期」。", "The government-designated 'general holidays'."]],
+    [["聖誕節翌日香港稱為？", "What is the day after Christmas called in Hong Kong?"], ["節禮日", "Boxing Day"], [["復活節星期一", "Easter Monday"], ["冬至", "Winter Solstice"], ["勞動節", "Labour Day"]], ["與聖誕同是公眾假期。", "Also a public holiday."]],
+    [["復活節期間香港有哪三天假期？", "Which three Easter days are public holidays in Hong Kong?"], ["耶穌受難節、翌日及復活節星期一", "Good Friday, the following day and Easter Monday"], [["只有復活節星期日", "Easter Sunday only"], ["復活節前一週全週", "The whole week before"], ["沒有假期", "None"]], ["與英國殖民歷史有關。", "A legacy of British rule."]],
+    [["勞動節是哪一天？", "On which date is Labour Day?"], ["5 月 1 日", "1 May"], [["1 月 1 日", "1 January"], ["10 月 1 日", "1 October"], ["12 月 25 日", "25 December"]], ["全球勞工節日。", "An international workers' day."]],
+    [["維港每晚的「幻彩詠香江」大約在何時舉行？", "At about what time is the nightly 'Symphony of Lights' show?"], ["晚上 8 時", "8pm"], [["早上 8 時", "8am"], ["中午 12 時", "Noon"], ["凌晨 3 時", "3am"]], ["2004 年起每晚上演。", "Shown nightly since 2004."]],
+    [["大坑舞火龍在哪個節日舉行？", "At which festival is the Tai Hang Fire Dragon Dance held?"], ["中秋節", "Mid-Autumn Festival"], [["端午節", "Tuen Ng"], ["清明節", "Ching Ming"], ["聖誕節", "Christmas"]], ["連續三晚舉行，已列入國家級非遺。", "Held for three nights, and listed as national intangible heritage."]],
+    [["「盆菜」是哪類地方的傳統宴席？", "'Poon choi' is a traditional feast of which communities?"], ["新界圍村", "Walled villages in the New Territories"], [["賽馬會", "The Jockey Club"], ["港島半山", "Mid-Levels"], ["郵輪", "Cruise ships"]], ["多層食材疊在一個大盆裏。", "Layers of ingredients are piled in one big basin."]],
+    [["新年常見的賀年糕點是？", "A common Lunar New Year pastry is…"], ["蘿蔔糕與年糕", "Turnip cake and sticky rice cake"], [["雞蛋仔", "Egg waffles"], ["菠蘿包", "Pineapple buns"], ["月餅", "Mooncakes"]], ["寓意步步高升。", "Symbolising rising fortunes."]],
+    [["回歸前有哪個假期後來被取消？", "Which pre-1997 holiday was dropped after the handover?"], ["英女皇壽辰", "The Queen's Birthday"], [["中秋節", "Mid-Autumn"], ["清明節", "Ching Ming"], ["聖誕節", "Christmas"]], ["「重光紀念日」也已取消。", "Liberation Day was dropped too."]],
+    [["元宵節又稱為？", "What is the Lantern Festival also known as?"], ["元宵節（農曆正月十五）", "Yuen Siu, the 15th day of the first lunar month"], [["中秋節", "Mid-Autumn"], ["重陽節", "Chung Yeung"], ["清明節", "Ching Ming"]], ["標誌着新年慶祝結束。", "It marks the end of New Year celebrations."]],
+  ],
+});
