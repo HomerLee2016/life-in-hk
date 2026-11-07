@@ -1,0 +1,39 @@
+name: Export question bank from Discussions
+
+on:
+  workflow_dispatch:
+    inputs:
+      min_votes:
+        description: Minimum upvotes for a question to be included
+        default: '1'
+  schedule:
+    - cron: '0 3 * * 1' # weekly, Monday 03:00 UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+  discussions: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Export top-voted discussions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run export:questions -- --min-votes "${{ inputs.min_votes || '1' }}"
+      - run: npm run check:questions
+      - run: npm test
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: bot/question-bank-export
+          commit-message: Update question bank from Discussions
+          title: Update question bank from Discussions
+          body: Automated export of the top-voted question proposals (see src/data/questions.csv).
+          add-paths: src/data/questions.csv

@@ -1,0 +1,87 @@
+title: "[Question] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose a question for the Life in HK quiz. Upvote (👍) the ones you like — the top ~400 voted questions are exported into the 17 tests (24 each).
+        Keep it factual and defensible, cite a source, and be respectful: no slurs and no targeting of private individuals.
+        Fill in **every** field in both languages, otherwise the question is skipped. Do not change the field labels.
+  - type: input
+    id: quiz
+    attributes:
+      label: "Quiz number (1-17)"
+      description: "Which quiz should this question join? Each quiz mixes topics and has 24 questions; the top-voted questions win a place."
+    validations: { required: true }
+  - type: dropdown
+    id: topic
+    attributes:
+      label: "Topic"
+      description: "Syllabus topic (history, values, culture, everyday life…)."
+      options:
+        - colony
+        - wartime
+        - boom
+        - lionrock
+        - road1997
+        - june4
+        - handover
+        - rights
+        - vote
+        - y2019
+        - after2019
+        - manners
+        - culture
+        - media_sport
+        - festivals
+        - life_services
+        - life_work_money
+    validations: { required: true }
+  - type: textarea
+    id: q-zh
+    attributes: { label: "Question (繁體中文)" }
+    validations: { required: true }
+  - type: textarea
+    id: q-en
+    attributes: { label: "Question (English)" }
+    validations: { required: true }
+  - type: input
+    id: c-zh
+    attributes: { label: "Correct answer (繁體中文)" }
+    validations: { required: true }
+  - type: input
+    id: c-en
+    attributes: { label: "Correct answer (English)" }
+    validations: { required: true }
+  - type: input
+    id: w1-zh
+    attributes: { label: "Wrong answer 1 (繁體中文)" }
+    validations: { required: true }
+  - type: input
+    id: w1-en
+    attributes: { label: "Wrong answer 1 (English)" }
+    validations: { required: true }
+  - type: input
+    id: w2-zh
+    attributes: { label: "Wrong answer 2 (繁體中文)" }
+    validations: { required: true }
+  - type: input
+    id: w2-en
+    attributes: { label: "Wrong answer 2 (English)" }
+    validations: { required: true }
+  - type: input
+    id: w3-zh
+    attributes: { label: "Wrong answer 3 (繁體中文)" }
+    validations: { required: true }
+  - type: input
+    id: w3-en
+    attributes: { label: "Wrong answer 3 (English)" }
+    validations: { required: true }
+  - type: textarea
+    id: e-zh
+    attributes: { label: "Explanation and source (繁體中文)", description: "Include a link to a reliable source." }
+    validations: { required: true }
+  - type: textarea
+    id: e-en
+    attributes: { label: "Explanation and source (English)" }
+    validations: { required: true }
