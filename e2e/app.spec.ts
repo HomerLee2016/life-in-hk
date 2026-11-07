@@ -223,3 +223,24 @@ test('quizzes mix topics and show a topic tag', async ({ page }) => {
   }
   expect(topics.size).toBeGreaterThanOrEqual(8);
 });
+
+test('no lantern logo and no red in the theme (accent is blue, wrong answers are amber)', async ({ page }) => {
+  await page.goto('./#/tests/1');
+  expect(await page.locator('body').innerText()).not.toContain('🏮');
+  await expect(page.locator('.logo')).toHaveCount(0);
+  const rgb = (s: string) => s.match(/\d+/g)!.slice(0, 3).map(Number);
+  const accent = rgb(await page.evaluate(() => getComputedStyle(document.querySelector('.tabs a[aria-selected="true"]')!).color));
+  expect(accent[2]).toBeGreaterThan(accent[0]); // blue > red
+  // Answer wrong on purpose: find the wrong option by answering the first, and if it was right, pick another question.
+  for (let i = 0; i < 24; i++) {
+    await page.locator('button.opt').first().click();
+    if (await page.locator('button.opt.bad').count()) break;
+    await page.locator('#next').click();
+  }
+  const bad = rgb(await page.evaluate(() => getComputedStyle(document.querySelector('button.opt.bad')!).borderTopColor));
+  expect(bad[0]).toBeGreaterThan(bad[2]); // warm (amber)
+  expect(bad[1]).toBeGreaterThan(bad[2]);
+  expect(bad[1] / bad[0]).toBeGreaterThan(0.45); // green channel present => amber/orange, not red
+  await expect(page.locator('button.opt.bad .mark')).toHaveText('✗');
+  await expect(page.locator('button.opt.right .mark')).toHaveText('✓');
+});

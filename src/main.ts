@@ -51,7 +51,7 @@ function header(active: 'tests' | 'questions' | 'contact'): string {
   const nextTheme = theme === 'dark' ? tr('themeToLight', lang) : tr('themeToDark', lang);
   return `
   <header class="top">
-    <div class="brand"><span class="logo" aria-hidden="true">🏮</span>
+    <div class="brand">
       <div><h1>${esc(tr('appTitle', lang))}</h1><p class="tag">${esc(tr('tagline', lang))}</p></div></div>
     <div class="tools">
       <button id="lang" class="chip" aria-label="${esc(tr('langAria', lang))}">${esc(tr('langBtn', lang))}</button>
@@ -149,10 +149,10 @@ function quizPage(test: QuizTest): string {
     let cls = 'opt';
     if (done) cls += src === 0 ? ' right' : src === picked ? ' bad' : ' dim';
     return `<button class="${cls}" data-opt="${src}" ${done ? 'disabled' : ''}>
-      <span class="key">${'ABCD'[pos]}</span><span>${esc(optionLabel(s, qi, src))}</span></button>`;
+      <span class="key">${'ABCD'[pos]}</span><span>${esc(optionLabel(s, qi, src))}</span>${done && src === 0 ? '<span class="mark" aria-hidden="true">✓</span>' : done && src === picked ? '<span class="mark" aria-hidden="true">✗</span>' : ''}</button>`;
   }).join('');
   const feedback = done ? `<div class="feedback ${picked === 0 ? 'ok' : 'no'}" role="status">
-      <strong>${esc(tr(picked === 0 ? 'correct' : 'wrong', lang))}</strong>
+      <strong>${picked === 0 ? '✓ ' : '✗ '}${esc(tr(picked === 0 ? 'correct' : 'wrong', lang))}</strong>
       ${picked === 0 ? '' : `<div>${esc(tr('rightAnswerWas', lang))}${esc(optionLabel(s, qi, 0))}</div>`}
       <p>${esc(t(q.explanation, lang))}</p>
       <button id="next" class="btn">${esc(tr(qi === test.questions.length - 1 ? 'seeResult' : 'next', lang))}</button></div>` : '';
