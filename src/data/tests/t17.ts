@@ -28,6 +28,6 @@ export default defineTest({
     [["國際義工日是哪天？", "When is International Volunteer Day?"], ["12 月 5 日", "5 December"], [["1 月 1 日", "1 January"], ["7 月 1 日", "1 July"], ["10 月 1 日", "1 October"]], ["聯合國訂定。", "Designated by the UN."]],
     [["香港紅十字會的主要服務之一是？", "A main service run by the Hong Kong Red Cross is…"], ["血液捐贈服務", "The blood transfusion service"], [["賽馬", "Horse racing"], ["電影審查", "Film censorship"], ["發行鈔票", "Printing banknotes"]], ["市民定期捐血救人。", "Residents regularly donate blood to save lives."]],
     [["颱風後見到街道有倒樹，市民守望相助的做法是？", "After a typhoon, trees block the road. What reflects Hong Kong's mutual-help spirit?"], ["通報有關部門並協助清理或提醒他人", "Report it and help clear or warn others"], [["拍照後走開", "Take a photo and walk on"], ["把樹搬到別人門口", "Move it to someone's door"], ["推給鄰居", "Blame a neighbour"]], ["守望相助是獅子山精神之一。", "Helping each other is a core Lion Rock value."]],
-    [["成年人在香港申請身份證，需要年滿多少歲？", "At what age must Hong Kong residents register for an identity card?"], "11", ["1", "30", "65"], ["11 歲須登記，18 歲換領成人身份證。", "Registration at 11; a new card at 18."]],
+    [["香港居民須在年滿多少歲時登記身份證？", "At what age must Hong Kong residents register for an identity card?"], "11", ["1", "30", "65"], ["11 歲須登記，18 歲換領成人身份證。", "Registration at 11; a new card at 18."]],
   ],
 });

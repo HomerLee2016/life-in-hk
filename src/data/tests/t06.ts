@@ -28,6 +28,6 @@ export default defineTest({
     [["六四紀念館於哪一年在尖沙咀開幕？", "In which year did the June 4 Museum open in Tsim Sha Tsui?"], "2012", ["1997", "2003", "2019"], ["紀念館由支聯會營運，於 2021 年關閉。", "Run by the Alliance, it closed in 2021."]],
     [["1989 年 6 月 4 日是星期幾？", "On which day of the week was 4 June 1989?"], ["星期日", "Sunday"], [["星期一", "Monday"], ["星期五", "Friday"], ["星期三", "Wednesday"]], ["當時是星期日，香港市民大規模悼念。", "It was a Sunday; Hong Kong held mass mourning."]],
     [["香港市民於六四後的主要行動是下列哪項？", "Which of these was a major Hong Kong response after June 4?"], ["遊行、集會、默哀及籌款", "Marches, rallies, silent tributes and fundraising"], [["慶祝派對", "Celebration parties"], ["舉辦運動會", "Sports days"], ["沒有任何反應", "No reaction at all"]], ["大量市民參與悼念與捐款。", "Huge numbers joined the mourning and donated."]],
-    [["香港大學學生會在六四後作出哪類行動？", "What did Hong Kong students do after June 4?"], ["舉行悼念與聲援活動", "Held vigils and solidarity activities"], [["舉辦嘉年華", "Held a carnival"], ["拒絕討論", "Refused to discuss it"], ["暫停所有活動", "Suspended everything"]], ["各大專院校均有悼念活動。", "Campuses across Hong Kong held tributes."]],
+    [["香港大專學生在六四後作出哪類行動？", "What did Hong Kong students do after June 4?"], ["舉行悼念與聲援活動", "Held vigils and solidarity activities"], [["舉辦嘉年華", "Held a carnival"], ["拒絕討論", "Refused to discuss it"], ["暫停所有活動", "Suspended everything"]], ["各大專院校均有悼念活動。", "Campuses across Hong Kong held tributes."]],
   ],
 });

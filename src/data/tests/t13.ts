@@ -7,7 +7,7 @@ export default defineTest({
   qs: [
     [["李小龍的名言「Be water」意思大致是？", "Roughly what does Bruce Lee's 'Be water' mean?"], ["像水一樣靈活應變", "Stay flexible and adaptable like water"], [["多喝水", "Drink more water"], ["不要游泳", "Don't swim"], ["節約用水", "Save water"]], ["出自李小龍的訪談。", "It comes from one of his interviews."]],
     [["王家衛的哪部電影讓梁朝偉在康城影帝？", "Which Wong Kar-wai film won Tony Leung best actor at Cannes?"], ["《花樣年華》", "In the Mood for Love"], [["《無間道》", "Infernal Affairs"], ["《功夫》", "Kung Fu Hustle"], ["《少林足球》", "Shaolin Soccer"]], ["電影於 2000 年上映。", "Released in 2000."]],
-    [["成龍於哪年獲奧斯卡終身成就獎？", "In which year did Jackie Chan receive an honorary Oscar?"], "2016", ["1973", "1985", "2003"], ["他是首位獲此榮譽的華語動作巨星之一。", "He was honoured for his career in action cinema."]],
+    [["成龍於哪年獲奧斯卡終身成就獎？", "In which year did Jackie Chan receive an honorary Oscar?"], "2016", ["1973", "1985", "2003"], ["他是表彰其動作電影生涯。", "He was honoured for his career in action cinema."]],
     [["《無間道》被哪部荷里活電影翻拍？", "Which Hollywood film remade 'Infernal Affairs'?"], ["《無間行者》（The Departed）", "The Departed"], [["《奪寶奇兵》", "Raiders of the Lost Ark"], ["《鐵達尼號》", "Titanic"], ["《阿凡達》", "Avatar"]], ["《無間行者》獲奧斯卡最佳影片。", "It won the Oscar for Best Picture."]],
     [["《功夫》（2004）由誰導演並主演？", "Who directed and starred in 'Kung Fu Hustle' (2004)?"], ["周星馳", "Stephen Chow"], [["成龍", "Jackie Chan"], ["李連杰", "Jet Li"], ["吳宇森", "John Woo"]], ["周星馳「無厘頭」喜劇風靡華人世界。", "His slapstick style swept Chinese-speaking audiences."]],
     [["Beyond 的哪首歌是 1993 年的經典？", "Which Beyond song is a 1993 classic?"], ["《海闊天空》", "'Boundless Oceans, Vast Skies'"], [["《獅子山下》", "'Below the Lion Rock'"], ["《千千闕歌》", "'Qianqian Quege'"], ["《願榮光歸香港》", "'Glory to Hong Kong'"]], ["主音黃家駒同年逝世。", "Lead singer Wong Ka-kui died the same year."]],

@@ -28,6 +28,6 @@ export default defineTest({
     [["「盆菜」是哪類地方的傳統宴席？", "'Poon choi' is a traditional feast of which communities?"], ["新界圍村", "Walled villages in the New Territories"], [["賽馬會", "The Jockey Club"], ["港島半山", "Mid-Levels"], ["郵輪", "Cruise ships"]], ["多層食材疊在一個大盆裏。", "Layers of ingredients are piled in one big basin."]],
     [["新年常見的賀年糕點是？", "A common Lunar New Year pastry is…"], ["蘿蔔糕與年糕", "Turnip cake and sticky rice cake"], [["雞蛋仔", "Egg waffles"], ["菠蘿包", "Pineapple buns"], ["月餅", "Mooncakes"]], ["寓意步步高升。", "Symbolising rising fortunes."]],
     [["回歸前有哪個假期後來被取消？", "Which pre-1997 holiday was dropped after the handover?"], ["英女皇壽辰", "The Queen's Birthday"], [["中秋節", "Mid-Autumn"], ["清明節", "Ching Ming"], ["聖誕節", "Christmas"]], ["「重光紀念日」也已取消。", "Liberation Day was dropped too."]],
-    [["元宵節又稱為？", "What is the Lantern Festival also known as?"], ["元宵節（農曆正月十五）", "Yuen Siu, the 15th day of the first lunar month"], [["中秋節", "Mid-Autumn"], ["重陽節", "Chung Yeung"], ["清明節", "Ching Ming"]], ["標誌着新年慶祝結束。", "It marks the end of New Year celebrations."]],
+    [["元宵節是農曆哪一天？", "On which lunar date is the Lantern Festival?"], ["正月十五", "The 15th day of the first lunar month"], [["八月十五", "The 15th of the eighth month"], ["九月初九", "The 9th of the ninth month"], ["五月初五", "The 5th of the fifth month"]], ["標誌着新年慶祝結束。", "It marks the end of New Year celebrations."]],
   ],
 });
