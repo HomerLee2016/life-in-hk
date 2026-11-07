@@ -8,9 +8,13 @@ const toCells = (r: QuestionRow): string[] => [
   r.explanation[0], r.explanation[1],
 ];
 
-/** Replace all community rows (those with a `source`) in the CSV text with `community`; seed rows are untouched. */
-export function mergeCommunityIntoCsv(csvText: string, community: readonly QuestionRow[]): { csv: string; seed: number } {
-  const seed = parseCsvObjects(csvText).filter((r) => !r.source);
+/** Replace all community rows (those with a `source`) in the CSV text with `community`. Seed rows keep their content; `seedVotes` (id -> upvotes of the seeded Discussion) updates their `votes`. */
+export function mergeCommunityIntoCsv(
+  csvText: string,
+  community: readonly QuestionRow[],
+  seedVotes: ReadonlyMap<string, number> = new Map(),
+): { csv: string; seed: number } {
+  const seed = parseCsvObjects(csvText).filter((r) => !r.source).map((r) => (seedVotes.has(r.id) ? { ...r, votes: String(seedVotes.get(r.id)) } : r));
   const rows = [[...CSV_COLUMNS], ...seed.map((r) => CSV_COLUMNS.map((c) => r[c] ?? '')), ...community.map(toCells)];
   return { csv: toCsv(rows), seed: seed.length };
 }

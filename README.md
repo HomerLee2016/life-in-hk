@@ -28,6 +28,8 @@ CI runs `npm run check:questions`: it fails unless every one of the 17 quizzes h
 
 Community questions: propose in **Discussions → Question bank** (form in `.github/DISCUSSION_TEMPLATE/question-bank.yml`) and 👍 upvote.
 `npm run export:questions` (needs `GITHUB_TOKEN`) writes the top 24 voted per quiz into the CSV (rows with a `source` URL); the *Export question bank* workflow runs weekly and opens a PR.
-Create a Discussions category with slug `question-bank` first.
+Create a Discussions category with slug `question-bank` first. Seed questions are posted with the `initial version` label (`npm run seed:discussions`, or the *Seed question bank into Discussions* workflow).
+
+How votes become the shortlist, and how to suggest changes to the rules: [docs/SHORTLIST_GUIDE.md](docs/SHORTLIST_GUIDE.md).
 
 This quiz is a cultural game based on documented history and civic values. Be respectful: no harassment of individuals.

@@ -88,3 +88,40 @@ export function topPerQuiz(rows: readonly QuestionRow[]): QuestionRow[] {
   }
   return out;
 }
+
+/** Label put on every seeded discussion (the initial question bank from questions.csv). */
+export const INITIAL_LABEL = 'initial version';
+
+const SEED_MARKER = /<!--\s*life-in-hk-seed:\s*([A-Za-z0-9_-]+)\s*-->/;
+
+/** Hidden marker that ties a seeded discussion to its CSV row; used for idempotent seeding and vote export. */
+export const seedMarker = (id: string): string => `<!-- life-in-hk-seed: ${id} -->`;
+
+/** CSV id of the seed row a discussion was created from, or null for community posts. */
+export const seedIdOf = (body: string): string | null => SEED_MARKER.exec(body)?.[1] ?? null;
+
+/** Discussion title for a seed row: stable id prefix + English question (trimmed). */
+export function seedTitle(r: QuestionRow): string {
+  const q = r.question[1].replace(/\s+/g, ' ').trim();
+  return `[Question] ${r.id} · ${q.length > 150 ? `${q.slice(0, 147)}…` : q}`;
+}
+
+/**
+ * Discussion body for a seed row, in the same "### Label" layout as the Question bank form so that
+ * parseSections/parseDiscussion read it back. Bank-only rows (no quiz yet) get "none".
+ */
+export function seedBody(r: QuestionRow): string {
+  const v: Record<keyof typeof FIELDS, string> = {
+    quiz: r.quiz === null ? 'none (bank only, not in a quiz yet)' : String(r.quiz),
+    topic: r.topic,
+    qZh: r.question[0], qEn: r.question[1],
+    cZh: r.correct[0], cEn: r.correct[1],
+    w1Zh: r.wrong[0][0], w1En: r.wrong[0][1],
+    w2Zh: r.wrong[1][0], w2En: r.wrong[1][1],
+    w3Zh: r.wrong[2][0], w3En: r.wrong[2][1],
+    eZh: `${r.explanation[0]}\n\n來源：初版種子題目，歡迎在留言補充或核實來源。`,
+    eEn: `${r.explanation[1]}\n\nSource: initial seed question. Please add or verify a source in the comments.`,
+  };
+  const sections = (Object.keys(FIELDS) as (keyof typeof FIELDS)[]).map((k) => `### ${FIELDS[k]}\n\n${v[k]}`);
+  return `${sections.join('\n\n')}\n\n---\n👍 Upvote if this question should be in the quiz. How votes are counted: docs/SHORTLIST_GUIDE.md\n${seedMarker(r.id)}\n`;
+}

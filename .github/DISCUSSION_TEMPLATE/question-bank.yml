@@ -19,8 +19,7 @@ body:
       label: "Topic"
       description: "Syllabus topic (history, values, culture, everyday life…)."
       options:
-        - colony
-        - wartime
+        - early_hk
         - boom
         - lionrock
         - road1997
@@ -29,6 +28,7 @@ body:
         - rights
         - vote
         - y2019
+        - people_slogans
         - after2019
         - manners
         - culture
