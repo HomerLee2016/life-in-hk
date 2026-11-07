@@ -161,11 +161,19 @@ function render() {
 }
 
 function wire() {
+  // Switching language/theme re-renders in place: quiz state (answers, option order, position,
+  // result screen) lives in `session`, and scroll/focus are preserved.
+  const rerenderKeepingView = (focusId: string) => {
+    const y = window.scrollY;
+    render();
+    window.scrollTo({ top: y });
+    document.getElementById(focusId)?.focus({ preventScroll: true });
+  };
   document.getElementById('lang')!.onclick = () => {
-    lang = lang === 'zh' ? 'en' : 'zh'; put('lih.lang', lang); render();
+    lang = lang === 'zh' ? 'en' : 'zh'; put('lih.lang', lang); rerenderKeepingView('lang');
   };
   document.getElementById('theme')!.onclick = () => {
-    theme = theme === 'dark' ? 'light' : 'dark'; put('lih.theme', theme); render();
+    theme = theme === 'dark' ? 'light' : 'dark'; put('lih.theme', theme); rerenderKeepingView('theme');
   };
   app.querySelectorAll<HTMLButtonElement>('button.opt').forEach((b) => {
     b.onclick = () => {

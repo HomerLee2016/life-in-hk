@@ -133,3 +133,50 @@ test('corrupt saved scores do not break the app', async ({ page }) => {
   await page.goto('./');
   await expect(page.locator('.card')).toHaveCount(17);
 });
+
+test('switching language or theme mid-quiz keeps progress, answers, option order and focus', async ({ page }) => {
+  await page.goto('./#/tests/6');
+  // Answer Q1 and go to Q2 so there is progress to lose.
+  await page.locator('button.opt').first().click();
+  await page.locator('#next').click();
+  await expect(page.locator('.qn')).toContainText('2');
+  const question = await page.locator('#question').innerText();
+  const orderBefore = await page.locator('button.opt .key + span').allInnerTexts();
+  const startLang = await page.locator('html').getAttribute('lang');
+
+  await page.locator('#lang').click();
+  await expect(page.locator('html')).not.toHaveAttribute('lang', startLang!);
+  await expect(page.locator('.qn')).toContainText('2'); // still question 2
+  expect(await page.locator('#question').innerText()).not.toBe(question); // text switched language
+  await expect(page.locator('#lang')).toBeFocused();
+  await expect(page.locator('button.opt')).toHaveCount(4);
+
+  // Answer in the new language, then switch back: answer + feedback must persist.
+  await page.locator('button.opt').nth(1).click();
+  await expect(page.locator('.feedback')).toBeVisible();
+  const bad = await page.locator('button.opt.bad').count();
+  await page.locator('#lang').click();
+  await expect(page.locator('.feedback')).toBeVisible();
+  expect(await page.locator('button.opt.bad').count()).toBe(bad);
+  await expect(page.locator('button.opt.right')).toHaveCount(1);
+  expect(await page.locator('#question').innerText()).toBe(question);
+  expect(await page.locator('button.opt .key + span').allInnerTexts()).toEqual(orderBefore);
+
+  // Theme toggle mid-quiz too.
+  await page.locator('#theme').click();
+  await expect(page.locator('.feedback')).toBeVisible();
+  await expect(page.locator('#theme')).toBeFocused();
+});
+
+test('switching language on the result screen keeps the result and review', async ({ page }) => {
+  await page.goto('./#/tests/7');
+  for (let i = 0; i < 24; i++) {
+    await page.locator('button.opt').first().click();
+    await page.locator('#next').click();
+  }
+  const score = await page.locator('.big b').innerText();
+  const reviews = await page.locator('.rev').count();
+  await page.locator('#lang').click();
+  await expect(page.locator('.big b')).toHaveText(score);
+  await expect(page.locator('.rev')).toHaveCount(reviews);
+});
