@@ -10,7 +10,8 @@
     "test": "vitest run",
     "e2e": "playwright test --trace off",
     "export:questions": "tsx scripts/export-discussions.ts",
-    "check:questions": "tsx scripts/check-questions.ts"
+    "check:questions": "tsx scripts/check-questions.ts",
+    "seed:discussions": "tsx scripts/seed-discussions.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { FIELDS, parseDiscussion, parseSections, topPerQuiz } from './discussions';
+import { FIELDS, parseDiscussion, parseSections, seedBody, seedIdOf, seedTitle, topPerQuiz } from './discussions';
+import { allRows } from './data/questions';
 import type { QuestionRow } from './types';
 
 const form = (over: Partial<Record<keyof typeof FIELDS, string>> = {}) => {
@@ -54,4 +55,26 @@ describe('topPerQuiz', () => {
     const out = topPerQuiz([row(1, 1, 'b'), row(1, 5, 'z'), row(1, 1, 'a')]);
     expect(out.map((r) => r.id)).toEqual(['z', 'a', 'b']);
   });
+});
+
+describe('seed discussions', () => {
+  it('every CSV row round-trips through seedBody -> parseDiscussion (quiz rows) and carries its id marker', () => {
+    for (const r of allRows) {
+      const body = seedBody(r);
+      expect(seedIdOf(body), r.id).toBe(r.id);
+      expect(seedTitle(r)).toContain(r.id);
+      expect(seedTitle(r).length).toBeLessThanOrEqual(200);
+      const back = parseDiscussion(body, 0, 'u', r.id);
+      if (r.quiz === null) expect(back, r.id).toBeNull();
+      else {
+        expect(back, r.id).not.toBeNull();
+        expect(back!.question).toEqual(r.question);
+        expect(back!.correct).toEqual(r.correct);
+        expect(back!.wrong).toEqual(r.wrong);
+        expect(back!.quiz).toBe(r.quiz);
+        expect(back!.topic).toBe(r.topic);
+      }
+    }
+  });
+  it('community posts have no seed id', () => expect(seedIdOf(form())).toBeNull());
 });

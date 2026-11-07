@@ -1,0 +1,37 @@
+name: Seed question bank into Discussions
+
+# One-off (safe to re-run): posts every row of src/data/questions.csv as a Discussion in the
+# `question-bank` category with the "initial version" label. Already-posted questions are skipped.
+# Prerequisite: create the Discussions category with slug `question-bank` (Discussions → Categories).
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Max new discussions this run (try 3 first, then 100000)
+        default: '3'
+      dry_run:
+        description: Dry run (post nothing)
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  discussions: write
+  issues: write # creating labels
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Seed discussions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run seed:discussions -- --limit "${{ inputs.limit }}" ${{ inputs.dry_run && '--dry-run' || '' }}

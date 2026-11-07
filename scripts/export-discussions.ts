@@ -10,7 +10,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { mergeCommunityIntoCsv } from '../src/data/merge';
-import { parseDiscussion, topPerQuiz } from '../src/discussions';
+import { parseDiscussion, seedIdOf, topPerQuiz } from '../src/discussions';
 import type { QuestionRow } from '../src/types';
 
 const args = process.argv.slice(2);
@@ -68,17 +68,21 @@ async function fetchAll(): Promise<Node[]> {
 const nodes = (await fetchAll()).filter((n) => n.category.slug === categorySlug);
 const valid: QuestionRow[] = [];
 const skipped: string[] = [];
+const seedVotes = new Map<string, number>(); // seeded discussions (initial version) carry votes for their CSV row
 for (const n of nodes) {
+  const seedId = seedIdOf(n.body);
+  if (seedId) { seedVotes.set(seedId, n.upvoteCount); continue; }
   const q = parseDiscussion(n.body, n.upvoteCount, n.url, `d${n.number}`);
   if (!q) skipped.push(n.url);
   else if (q.votes >= minVotes) valid.push(q);
 }
 const top = topPerQuiz(valid); // top 24 per quiz
+console.log(`${seedVotes.size} seeded discussions (votes applied to seed rows).`);
 console.log(`${nodes.length} discussions, ${valid.length} valid with >=${minVotes} votes, ${top.length} ${dryRun ? 'would be ' : ''}exported.`);
 if (skipped.length) console.log(`Skipped (incomplete/invalid):\n${skipped.map((u) => ` - ${u}`).join('\n')}`);
 if (!dryRun) {
   const csvUrl = new URL('../src/data/questions.csv', import.meta.url);
-  const { csv, seed } = mergeCommunityIntoCsv(readFileSync(csvUrl, 'utf8'), top);
+  const { csv, seed } = mergeCommunityIntoCsv(readFileSync(csvUrl, 'utf8'), top, seedVotes);
   writeFileSync(csvUrl, csv);
   console.log(`Wrote src/data/questions.csv (${seed} seed + ${top.length} community rows)`);
 }
