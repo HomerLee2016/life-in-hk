@@ -47,6 +47,8 @@ const dict = {
     '發現題目有錯、想提供更好的資料來源，或者想加新題目？歡迎到 GitHub 留言或提交 Pull Request。',
     'Spotted a mistake, have a better source, or want to suggest new questions? Open an issue or send a pull request on GitHub.',
   ],
+  contribute: ['新增題目／為題目投票', 'Add or vote on questions'],
+  contributeHint: ['想出新題目？到 GitHub Discussions 提交，得票最高的題目會加入測驗。', 'Got a better question? Post it in GitHub Discussions — the top-voted ones go into the tests.'],
   contactIssues: ['回報問題 / 建議', 'Report an issue / suggestion'],
   contactRepo: ['原始碼', 'Source code'],
   disclaimer: [

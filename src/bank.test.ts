@@ -33,7 +33,7 @@ describe('parseDiscussion', () => {
     expect(parseDiscussion('just chatting', 1, 'u')).toBeNull();
   });
   it('parseSections ignores text before the first heading', () => {
-    expect(parseSections('hi\n### A\n\nx\n### B\n\n_No response_')).toEqual({ A: 'x', B: '' });
+    expect(parseSections(`hi\n### ${FIELDS.qZh}\n\nx\n### ${FIELDS.qEn}\n\n_No response_`)).toEqual({ [FIELDS.qZh]: 'x', [FIELDS.qEn]: '' });
   });
 });
 
@@ -55,5 +55,35 @@ describe('ranking and merging', () => {
   });
   it('with no community questions the seed bank is used as-is', () => {
     expect(mergeTests(seedTests, [])).toEqual(seedTests);
+  });
+});
+
+describe('edge cases (review findings)', () => {
+  it('unknown ### headings inside a value do not truncate or hijack fields', () => {
+    const body = form({ eEn: `Line\n### Source\nfoo\n### ${FIELDS.qEn}\nHIJACK` });
+    const q = parseDiscussion(body, 1, 'u')!;
+    expect(q.question[1]).toBe('Question?'); // first occurrence wins
+    expect(q.explanation[1]).toContain('### Source');
+  });
+  it('rejects garbage test numbers', () => {
+    for (const bad of ['3abc', '1.9', '1e1', '0', '-1', '']) expect(parseDiscussion(form({ test: bad }), 1, 'u'), bad).toBeNull();
+    expect(parseDiscussion(form({ test: '17' }), 1, 'u')?.test).toBe(17);
+  });
+  it('rejects options that collide within one language', () => {
+    expect(parseDiscussion(form({ w1Zh: '甲' }), 1, 'u')).toBeNull();
+    expect(parseDiscussion(form({ w1En: ' a ' }), 1, 'u')).toBeNull();
+  });
+  it('filters per test before capping: a flood for test 1 cannot starve test 2', () => {
+    const flood = Array.from({ length: 500 }, (_, i) => cq(1, 10, String(i)));
+    const merged = mergeTests(seedTests, [...flood, cq(2, 1, 'only'), cq(99, 1000, 'bad')]);
+    expect(merged[1].questions[0].question).toEqual(['問only', 'Qonly']);
+    expect(merged.every((t) => t.questions.length === 24)).toBe(true);
+  });
+  it('de-duplicates community vs seed and community vs community', () => {
+    const s = seedTests[0].questions[0];
+    const dupOfSeed: CommunityQuestion = { ...cq(1, 5, 'x'), question: s.question as [string, string] };
+    const merged = mergeTests(seedTests, [dupOfSeed, cq(1, 4, 'd'), cq(1, 3, 'd')])[0].questions;
+    const keys = merged.map((q) => JSON.stringify(q.question));
+    expect(new Set(keys).size).toBe(24);
   });
 });

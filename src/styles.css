@@ -82,3 +82,6 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 @media (max-width: 480px) {
   h1 { font-size: 1.15rem; } .question { font-size: 1.1rem; } .tabs a { flex: 1; text-align: center; }
 }
+
+.tab-extra { margin-left: auto; font-size: .85rem; font-weight: 600 !important; align-self: center; padding: 6px 4px !important; color: var(--accent) !important; }
+@media (max-width: 480px) { .tabs { flex-wrap: wrap; } .tab-extra { flex-basis: 100%; text-align: right !important; margin: 0; } }

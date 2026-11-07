@@ -39,7 +39,7 @@
 # Question bank
 
 - Community questions come from GitHub Discussions (category `question-bank`, form in `.github/DISCUSSION_TEMPLATE/`).
-- `npm run export:questions` ranks by upvotes (top ~408) into `community.json`; the weekly workflow opens a PR.
+- `npm run export:questions` ranks by upvotes (top 24 per test, ≤ 408) into `community.json`; the weekly workflow opens a PR.
 - Don't edit field labels in the form: `src/bank.ts` parses them.
 
 # Code structure

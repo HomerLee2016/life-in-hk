@@ -99,3 +99,37 @@ test('unknown hash falls back to the tests list', async ({ page }) => {
   await page.goto('./#/tests/999');
   await expect(page.locator('.card')).toHaveCount(17);
 });
+
+test('Discussions link is visible in header, footer and Contact tab, opens in a new tab, in both languages', async ({ page }) => {
+  await page.goto('./');
+  const url = 'https://github.com/HomerLee2016/life-in-hk/discussions';
+  for (const sel of ['#link-discussions', '#footer-discussions']) {
+    await expect(page.locator(sel)).toBeVisible();
+    await expect(page.locator(sel)).toHaveAttribute('href', url);
+    await expect(page.locator(sel)).toHaveAttribute('target', '_blank');
+  }
+  await page.locator('#lang').click();
+  const zh = (await page.locator('html').getAttribute('lang')) === 'zh-Hant';
+  await expect(page.locator('#link-discussions')).toContainText(zh ? '新增題目' : 'Add or vote');
+  await page.locator('#tab-contact').click();
+  await expect(page.locator('#contact-discussions')).toHaveAttribute('href', url);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test('best score is recorded as soon as the last question is answered', async ({ page }) => {
+  await page.goto('./#/tests/3');
+  for (let i = 0; i < 23; i++) {
+    await page.locator('button.opt').first().click();
+    await page.locator('#next').click();
+  }
+  await page.locator('button.opt').first().click();
+  await page.goto('./#/tests');
+  await expect(page.locator('[data-test="3"] .badge')).toContainText('/24');
+});
+
+test('corrupt saved scores do not break the app', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('lih.bests', 'null'));
+  await page.goto('./');
+  await expect(page.locator('.card')).toHaveCount(17);
+});

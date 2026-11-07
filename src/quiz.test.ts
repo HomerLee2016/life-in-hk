@@ -80,3 +80,20 @@ describe('persistence helpers', () => {
     expect(detectTheme(false, null)).toBe('light');
   });
 });
+
+import { sanitizeBests } from './quiz';
+describe('edge cases (review findings)', () => {
+  it('sanitizeBests drops corrupt data', () => {
+    expect(sanitizeBests(null)).toEqual({});
+    expect(sanitizeBests(5)).toEqual({});
+    expect(sanitizeBests([1, 2])).toEqual({});
+    expect(sanitizeBests({ 1: 'abc', 2: 99, 3: 12.5, 4: -1, 99: 5, 5: 20 })).toEqual({ 5: 20 });
+  });
+  it('answer ignores out-of-range / NaN options and bad question index', () => {
+    const s = startSession(tests[0], seeded());
+    expect(answer(s, 0, NaN)).toBe(false);
+    expect(answer(s, 0, 7)).toBe(false);
+    expect(answer(s, 99, 0)).toBe(false);
+    expect(answeredCount(s)).toBe(0);
+  });
+});

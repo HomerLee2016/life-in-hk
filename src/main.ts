@@ -3,12 +3,13 @@ import { tests } from './data';
 import { tr } from './i18n';
 import {
   PASS_MARK, QUESTIONS_PER_TEST, answer, detectLang, detectTheme, hasPassed,
-  load, recordBest, save, score, startSession, t, verdict, wrongQuestions,
+  load, recordBest, sanitizeBests, isFinished, save, score, startSession, t, verdict, wrongQuestions,
   type Bests, type Session,
 } from './quiz';
 import type { Lang, QuizTest, Theme } from './types';
 
 const REPO = 'https://github.com/HomerLee2016/life-in-hk';
+const DISCUSSIONS = `${REPO}/discussions`;
 
 const store = (k: string): string | null => {
   try { return localStorage.getItem(k); } catch { return null; }
@@ -19,7 +20,7 @@ const put = (k: string, v: string) => {
 
 let lang: Lang = detectLang(navigator.language, store('lih.lang'));
 let theme: Theme = detectTheme(matchMedia('(prefers-color-scheme: dark)').matches, store('lih.theme'));
-let bests: Bests = load<Bests>('lih.bests', {});
+let bests: Bests = sanitizeBests(load<unknown>('lih.bests', {}));
 let session: Session | null = null;
 let showResult = false;
 
@@ -58,6 +59,7 @@ function header(active: 'tests' | 'contact'): string {
   <nav class="tabs" role="tablist">
     <a role="tab" id="tab-tests" href="#/tests" aria-selected="${active === 'tests'}">${esc(tr('tabTests', lang))}</a>
     <a role="tab" id="tab-contact" href="#/contact" aria-selected="${active === 'contact'}">${esc(tr('tabContact', lang))}</a>
+    <a class="tab-extra" id="link-discussions" href="${DISCUSSIONS}" target="_blank" rel="noopener">${esc(tr('contribute', lang))} ↗</a>
   </nav>`;
 }
 
@@ -74,13 +76,15 @@ function testsPage(): string {
       <div class="meta"><span>${esc(tr('questionsN', lang))}</span>${badge}</div></a>`;
   }).join('');
   return `<p class="intro">${esc(tr('intro', lang))}</p><section class="grid">${cards}</section>
-    <p class="note">${esc(tr('disclaimer', lang))}</p>`;
+    <p class="note"><a id="footer-discussions" href="${DISCUSSIONS}" target="_blank" rel="noopener">${esc(tr('contribute', lang))} ↗</a> · ${esc(tr('disclaimer', lang))}</p>`;
 }
 
 function contactPage(): string {
   return `<section class="panel"><h2>${esc(tr('contactTitle', lang))}</h2>
     <p>${esc(tr('contactBody', lang))}</p>
-    <p class="links"><a class="btn" href="${REPO}/issues" target="_blank" rel="noopener">${esc(tr('contactIssues', lang))}</a>
+    <p>${esc(tr('contributeHint', lang))}</p>
+    <p class="links"><a class="btn" id="contact-discussions" href="${DISCUSSIONS}" target="_blank" rel="noopener">${esc(tr('contribute', lang))} ↗</a>
+    <a class="btn ghost" href="${REPO}/issues" target="_blank" rel="noopener">${esc(tr('contactIssues', lang))}</a>
     <a class="btn ghost" href="${REPO}" target="_blank" rel="noopener">${esc(tr('contactRepo', lang))}</a></p>
     <p class="note">${esc(tr('disclaimer', lang))}</p></section>`;
 }
@@ -167,6 +171,10 @@ function wire() {
     b.onclick = () => {
       if (!session) return;
       answer(session, session.current, Number(b.dataset.opt));
+      if (isFinished(session)) {
+        bests = recordBest(sanitizeBests(load<unknown>('lih.bests', {})), session.test.id, score(session));
+        save('lih.bests', bests);
+      }
       render();
       document.getElementById('next')?.scrollIntoView({ block: 'nearest' });
     };
@@ -176,8 +184,6 @@ function wire() {
     if (!session) return;
     if (session.current === session.test.questions.length - 1) {
       showResult = true;
-      bests = recordBest(bests, session.test.id, score(session));
-      save('lih.bests', bests);
     } else session.current++;
     render();
     window.scrollTo({ top: 0 });

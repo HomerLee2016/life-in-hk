@@ -41,16 +41,32 @@ export const FIELDS = {
 } as const;
 
 /** Split "### Heading\n\nvalue" sections into a map. "_No response_" counts as empty. */
+const KNOWN_HEADINGS = new Set<string>(Object.values(FIELDS));
+
+/**
+ * Split "### Heading\n\nvalue" sections into a map. Only known field headings start a section
+ * (other "###" lines belong to the previous value); the first occurrence of a heading wins.
+ */
 export function parseSections(body: string): Record<string, string> {
   const out: Record<string, string> = {};
-  const parts = body.replace(/\r\n/g, '\n').split(/^###\s+/m).slice(1);
-  for (const part of parts) {
-    const nl = part.indexOf('\n');
-    const heading = (nl === -1 ? part : part.slice(0, nl)).trim();
-    let value = nl === -1 ? '' : part.slice(nl + 1).trim();
-    if (value === '_No response_') value = '';
-    out[heading] = value;
+  let current: string | null = null;
+  let buf: string[] = [];
+  const flush = () => {
+    if (current !== null && !(current in out)) {
+      let value = buf.join('\n').trim();
+      if (value === '_No response_') value = '';
+      out[current] = value;
+    }
+  };
+  for (const line of body.replace(/\r\n/g, '\n').split('\n')) {
+    const m = /^###[ \t]+(.+?)[ \t]*$/.exec(line);
+    if (m && KNOWN_HEADINGS.has(m[1])) {
+      flush();
+      current = m[1];
+      buf = [];
+    } else if (current !== null) buf.push(line);
   }
+  flush();
   return out;
 }
 
@@ -58,7 +74,8 @@ export function parseSections(body: string): Record<string, string> {
 export function parseDiscussion(body: string, votes: number, source: string): CommunityQuestion | null {
   const s = parseSections(body);
   const get = (k: keyof typeof FIELDS) => (s[FIELDS[k]] ?? '').trim();
-  const test = Number.parseInt(get('test'), 10);
+  const m = /^(\d{1,2})(?:\s*[-–:)].*)?$/.exec(get('test'));
+  const test = m ? Number(m[1]) : NaN;
   if (!Number.isInteger(test) || test < 1 || test > TEST_COUNT) return null;
   const pairs: [keyof typeof FIELDS, keyof typeof FIELDS][] = [
     ['qZh', 'qEn'], ['cZh', 'cEn'], ['w1Zh', 'w1En'], ['w2Zh', 'w2En'], ['w3Zh', 'w3En'], ['eZh', 'eEn'],
@@ -66,15 +83,24 @@ export function parseDiscussion(body: string, votes: number, source: string): Co
   const bi = pairs.map(([zh, en]) => [get(zh), get(en)] as Bi);
   if (bi.some(([zh, en]) => !zh || !en)) return null;
   const [question, correct, w1, w2, w3, explanation] = bi;
-  const all = [correct, w1, w2, w3].map(([zh, en]) => `${zh}\u0000${en}`);
-  if (new Set(all).size !== 4) return null; // duplicate options
+  const opts = [correct, w1, w2, w3];
+  for (const i of [0, 1]) {
+    if (new Set(opts.map((o) => o[i].trim().toLowerCase())).size !== 4) return null; // duplicate options in a language
+  }
   return { test, votes, source, question, correct, wrong: [w1, w2, w3], explanation };
 }
 
+/** Ranking applied per test at export: top 24 for each of the 17 tests (so ≤ 408 in total). */
+export function topPerTest(qs: readonly CommunityQuestion[]): CommunityQuestion[] {
+  const out: CommunityQuestion[] = [];
+  for (let id = 1; id <= TEST_COUNT; id++) out.push(...rankQuestions(qs.filter((q) => q.test === id), QUESTIONS_PER_TEST));
+  return out;
+}
+
 /** Highest votes first; ties broken by source URL for deterministic output. */
-export function rankQuestions(qs: readonly CommunityQuestion[], limit = TEST_COUNT * QUESTIONS_PER_TEST): CommunityQuestion[] {
+export function rankQuestions(qs: readonly CommunityQuestion[], limit: number = TEST_COUNT * QUESTIONS_PER_TEST): CommunityQuestion[] {
   return [...qs]
-    .sort((a, b) => b.votes - a.votes || a.source.localeCompare(b.source))
+    .sort((a, b) => b.votes - a.votes || (a.source < b.source ? -1 : a.source > b.source ? 1 : 0))
     .slice(0, limit);
 }
 
@@ -92,11 +118,24 @@ export function toQuestion(c: CommunityQuestion): Question {
  * Build the final quizzes: for each seed test, take its community questions (by votes, desc),
  * then fill the remaining slots with seed questions in their original order. Always 24 per test.
  */
+const norm = (x: Txt) => (typeof x === 'string' ? x : x.join('|')).trim().toLowerCase();
+
 export function mergeTests(seed: readonly QuizTest[], community: readonly CommunityQuestion[]): QuizTest[] {
-  const ranked = rankQuestions(community);
   return seed.map((t) => {
-    const mine = ranked.filter((c) => c.test === t.id).slice(0, QUESTIONS_PER_TEST).map(toQuestion);
-    const fill = t.questions.slice(0, QUESTIONS_PER_TEST - mine.length);
+    const seen = new Set<string>();
+    const mine: Question[] = [];
+    for (const c of rankQuestions(community.filter((x) => x.test === t.id), Infinity)) {
+      const qn = toQuestion(c);
+      const key = norm(qn.question);
+      if (seen.has(key) || mine.length >= QUESTIONS_PER_TEST) continue;
+      seen.add(key);
+      mine.push(qn);
+    }
+    const fill: Question[] = [];
+    for (const sq of t.questions) {
+      if (mine.length + fill.length >= QUESTIONS_PER_TEST) break;
+      if (!seen.has(norm(sq.question))) fill.push(sq);
+    }
     return { ...t, questions: [...mine, ...fill] };
   });
 }

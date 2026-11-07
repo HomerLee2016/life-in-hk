@@ -49,7 +49,9 @@ export function startSession(test: QuizTest, rng: () => number = Math.random): S
 }
 
 export function answer(s: Session, qIndex: number, optionIndex: number): boolean {
+  if (!s.test.questions[qIndex]) return false;
   if (s.picked[qIndex] !== null) return s.picked[qIndex] === 0; // no changing answers
+  if (!Number.isInteger(optionIndex) || optionIndex < 0 || optionIndex >= s.test.questions[qIndex].options.length) return false;
   s.picked[qIndex] = optionIndex;
   return optionIndex === 0;
 }
@@ -87,6 +89,17 @@ export function save(key: string, value: unknown): void {
 }
 
 export type Bests = Record<number, number>;
+
+/** Keep only entries with an integer test id 1..17 and an integer score 0..24; anything else is dropped. */
+export function sanitizeBests(raw: unknown): Bests {
+  const out: Bests = {};
+  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return out;
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    const id = Number(k);
+    if (Number.isInteger(id) && id >= 1 && id <= 17 && typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= QUESTIONS_PER_TEST) out[id] = v;
+  }
+  return out;
+}
 export function recordBest(bests: Bests, id: number, sc: number): Bests {
   return sc > (bests[id] ?? -1) ? { ...bests, [id]: sc } : bests;
 }
