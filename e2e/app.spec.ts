@@ -180,3 +180,46 @@ test('switching language on the result screen keeps the result and review', asyn
   await expect(page.locator('.big b')).toHaveText(score);
   await expect(page.locator('.rev')).toHaveCount(reviews);
 });
+
+test('All questions tab: full table, filters, search, language, no horizontal scroll', async ({ page }, info) => {
+  await page.goto('./');
+  await page.locator('#tab-questions').click();
+  await expect(page.locator('#tab-questions')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#qtable tbody tr')).toHaveCount(444);
+  await expect(page.locator('#qcount')).toContainText('444');
+  await shot(page, 'questions', info);
+
+  await page.locator('#q-quiz').selectOption('7');
+  await expect(page.locator('#qtable tbody tr')).toHaveCount(24);
+  await page.locator('#q-topic').selectOption('june4');
+  const n = await page.locator('#qtable tbody tr').count();
+  expect(n).toBeGreaterThanOrEqual(1);
+  expect(n).toBeLessThan(24);
+
+  await page.locator('#q-quiz').selectOption('');
+  await page.locator('#q-topic').selectOption('');
+  await page.locator('#q-search').fill('Possession Street');
+  await expect(page.locator('#qtable tbody tr')).toHaveCount(1);
+  
+  await page.locator('#q-search').fill('zzzz-no-such-question');
+  await expect(page.locator('#qresults')).toContainText(/No matching|沒有符合/);
+
+  // Language switch keeps the filters and switches the table language.
+  await page.locator('#q-search').fill('水坑口');
+  await expect(page.locator('#qtable tbody tr')).toHaveCount(2); // q001 explanation + q002 question
+  await page.locator('#lang').click();
+  await expect(page.locator('#q-search')).toHaveValue('水坑口');
+  await noHorizontalScroll(page);
+});
+
+test('quizzes mix topics and show a topic tag', async ({ page }) => {
+  await page.goto('./#/tests/1');
+  await expect(page.locator('.topic-tag')).toBeVisible();
+  const topics = new Set<string>();
+  for (let i = 0; i < 24; i++) {
+    topics.add(await page.locator('.topic-tag').innerText());
+    await page.locator('button.opt').first().click();
+    await page.locator('#next').click();
+  }
+  expect(topics.size).toBeGreaterThanOrEqual(8);
+});

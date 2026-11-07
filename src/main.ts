@@ -1,8 +1,9 @@
 import './styles.css';
-import { tests } from './data';
+import { allRows, tests } from './data/questions';
+import { TOPICS, topicName } from './topics';
 import { tr } from './i18n';
 import {
-  PASS_MARK, QUESTIONS_PER_TEST, answer, detectLang, detectTheme, hasPassed,
+  PASS_MARK, QUESTIONS_PER_QUIZ, answer, detectLang, detectTheme, hasPassed,
   load, recordBest, sanitizeBests, isFinished, save, score, startSession, t, verdict, wrongQuestions,
   type Bests, type Session,
 } from './quiz';
@@ -37,15 +38,16 @@ function applyChrome() {
   if (meta) meta.setAttribute('content', theme);
 }
 
-type Route = { page: 'tests' } | { page: 'contact' } | { page: 'quiz'; id: number };
+type Route = { page: 'tests' } | { page: 'questions' } | { page: 'contact' } | { page: 'quiz'; id: number };
 function route(): Route {
   const h = location.hash.replace(/^#\/?/, '');
   const m = /^tests\/(\d+)$/.exec(h);
   if (m && tests.some((x) => x.id === Number(m[1]))) return { page: 'quiz', id: Number(m[1]) };
-  return h === 'contact' ? { page: 'contact' } : { page: 'tests' };
+  if (h === 'contact') return { page: 'contact' };
+  return h === 'questions' ? { page: 'questions' } : { page: 'tests' };
 }
 
-function header(active: 'tests' | 'contact'): string {
+function header(active: 'tests' | 'questions' | 'contact'): string {
   const nextTheme = theme === 'dark' ? tr('themeToLight', lang) : tr('themeToDark', lang);
   return `
   <header class="top">
@@ -58,6 +60,7 @@ function header(active: 'tests' | 'contact'): string {
   </header>
   <nav class="tabs" role="tablist">
     <a role="tab" id="tab-tests" href="#/tests" aria-selected="${active === 'tests'}">${esc(tr('tabTests', lang))}</a>
+    <a role="tab" id="tab-questions" href="#/questions" aria-selected="${active === 'questions'}">${esc(tr('tabQuestions', lang))}</a>
     <a role="tab" id="tab-contact" href="#/contact" aria-selected="${active === 'contact'}">${esc(tr('tabContact', lang))}</a>
     <a class="tab-extra" id="link-discussions" href="${DISCUSSIONS}" target="_blank" rel="noopener">${esc(tr('contribute', lang))} ↗</a>
   </nav>`;
@@ -68,11 +71,11 @@ function testsPage(): string {
     const b = bests[x.id];
     const badge = b === undefined
       ? `<span class="badge">${esc(tr('notTried', lang))}</span>`
-      : `<span class="badge ${b >= PASS_MARK ? 'ok' : 'no'}">${esc(tr('best', lang))} ${b}/${QUESTIONS_PER_TEST}${b >= PASS_MARK ? ' ✓' : ''}</span>`;
+      : `<span class="badge ${b >= PASS_MARK ? 'ok' : 'no'}">${esc(tr('best', lang))} ${b}/${QUESTIONS_PER_QUIZ}${b >= PASS_MARK ? ' ✓' : ''}</span>`;
     return `<a class="card" href="#/tests/${x.id}" data-test="${x.id}">
       <span class="num">${x.id}</span>
-      <h3>${esc(x.title[lang === 'zh' ? 0 : 1])}</h3>
-      <p>${esc(x.blurb[lang === 'zh' ? 0 : 1])}</p>
+      <h3>${esc(tr('quizN', lang, { n: x.id }))}</h3>
+      <p>${esc(tr('quizBlurb', lang))}</p>
       <div class="meta"><span>${esc(tr('questionsN', lang))}</span>${badge}</div></a>`;
   }).join('');
   return `<p class="intro">${esc(tr('intro', lang))}</p><section class="grid">${cards}</section>
@@ -89,6 +92,45 @@ function contactPage(): string {
     <p class="note">${esc(tr('disclaimer', lang))}</p></section>`;
 }
 
+// ---- All questions (review table) ----
+const filters = { search: '', quiz: '', topic: '' };
+
+function questionRows(): string {
+  const term = filters.search.trim().toLowerCase();
+  const matches = allRows.filter((r) => {
+    if (filters.quiz && String(r.quiz) !== filters.quiz) return false;
+    if (filters.topic && r.topic !== filters.topic) return false;
+    if (!term) return true;
+    const hay = [r.id, ...r.question, ...r.correct, ...r.wrong.flat(), ...r.explanation].join('\n').toLowerCase();
+    return hay.includes(term);
+  });
+  const i = lang === 'zh' ? 0 : 1;
+  const rows = matches.map((r) => `<tr class="${r.active ? '' : 'bank'}" data-qid="${esc(r.id)}">
+    <td data-label="${esc(tr('colId', lang))}">${esc(r.id)}</td>
+    <td data-label="${esc(tr('colQuiz', lang))}">${r.quiz === null ? '—' : r.quiz}${r.active ? '' : ` <span class="badge">${esc(tr('bankOnly', lang))}</span>`}</td>
+    <td data-label="${esc(tr('colTopic', lang))}">${esc(topicName(r.topic, lang))}</td>
+    <td data-label="${esc(tr('colQuestion', lang))}" class="qcell">${esc(r.question[i])}</td>
+    <td data-label="${esc(tr('colCorrect', lang))}" class="ok-t">${esc(r.correct[i])}</td>
+    <td data-label="${esc(tr('colWrong', lang))}">${r.wrong.map((w) => esc(w[i])).join(' · ')}</td>
+    <td data-label="${esc(tr('colExplanation', lang))}" class="why">${esc(r.explanation[i])}</td></tr>`).join('');
+  return `<p class="note" id="qcount" role="status">${esc(tr('qShowing', lang, { n: matches.length, total: allRows.length }))}</p>
+    ${matches.length === 0 ? `<p>${esc(tr('noMatches', lang))}</p>` : `<div class="tablewrap"><table class="qtable" id="qtable"><thead><tr>
+      ${(['colId', 'colQuiz', 'colTopic', 'colQuestion', 'colCorrect', 'colWrong', 'colExplanation'] as const).map((k) => `<th>${esc(tr(k, lang))}</th>`).join('')}
+    </tr></thead><tbody>${rows}</tbody></table></div>`}`;
+}
+
+function questionsPage(): string {
+  const quizOpts = tests.map((x) => `<option value="${x.id}" ${filters.quiz === String(x.id) ? 'selected' : ''}>${esc(tr('quizN', lang, { n: x.id }))}</option>`).join('');
+  const topicOpts = TOPICS.map((x) => `<option value="${x.key}" ${filters.topic === x.key ? 'selected' : ''}>${esc(topicName(x.key, lang))}</option>`).join('');
+  return `<p class="intro">${esc(tr('qIntro', lang))}</p>
+    <div class="filters">
+      <input id="q-search" type="search" value="${esc(filters.search)}" placeholder="${esc(tr('qSearch', lang))}" aria-label="${esc(tr('qSearch', lang))}">
+      <select id="q-quiz" aria-label="${esc(tr('colQuiz', lang))}"><option value="">${esc(tr('qAllQuizzes', lang))}</option>${quizOpts}</select>
+      <select id="q-topic" aria-label="${esc(tr('colTopic', lang))}"><option value="">${esc(tr('qAllTopics', lang))}</option>${topicOpts}</select>
+    </div>
+    <div id="qresults">${questionRows()}</div>`;
+}
+
 function optionLabel(s: Session, q: number, src: number): string {
   return t(s.test.questions[q].options[src], lang);
 }
@@ -96,7 +138,7 @@ function optionLabel(s: Session, q: number, src: number): string {
 function quizPage(test: QuizTest): string {
   const s = session!;
   const back = `<a class="back" href="#/tests">${esc(tr('back', lang))}</a>`;
-  const title = `<h2 class="qt">${test.id}. ${esc(test.title[lang === 'zh' ? 0 : 1])}</h2>`;
+  const title = `<h2 class="qt">${esc(tr('quizN', lang, { n: test.id }))}</h2>`;
   if (showResult) return back + title + resultView(s);
 
   const qi = s.current;
@@ -118,6 +160,7 @@ function quizPage(test: QuizTest): string {
   return `${back}${title}
     <div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
     <p class="qn">${esc(tr('qOf', lang, { n: qi + 1, total: test.questions.length }))}</p>
+    <p class="topic-tag">${esc(topicName(q.topic, lang))}</p>
     <h3 class="question" id="question">${esc(t(q.question, lang))}</h3>
     <div class="opts">${opts}</div>${feedback}`;
 }
@@ -154,9 +197,9 @@ function render() {
     body = quizPage(test);
   } else {
     session = null; showResult = false;
-    body = r.page === 'contact' ? contactPage() : testsPage();
+    body = r.page === 'contact' ? contactPage() : r.page === 'questions' ? questionsPage() : testsPage();
   }
-  app.innerHTML = header(r.page === 'contact' ? 'contact' : 'tests') + `<main>${body}</main>`;
+  app.innerHTML = header(r.page === 'contact' ? 'contact' : r.page === 'questions' ? 'questions' : 'tests') + `<main>${body}</main>`;
   wire();
 }
 
@@ -196,6 +239,14 @@ function wire() {
     render();
     window.scrollTo({ top: 0 });
   };
+  const results = document.getElementById('qresults');
+  if (results) {
+    const refresh = () => { results.innerHTML = questionRows(); };
+    const bind = (id: string, key: keyof typeof filters, ev: string) => {
+      document.getElementById(id)!.addEventListener(ev, (e) => { filters[key] = (e.target as HTMLInputElement).value; refresh(); });
+    };
+    bind('q-search', 'search', 'input'); bind('q-quiz', 'quiz', 'change'); bind('q-topic', 'topic', 'change');
+  }
   const retry = document.getElementById('retry');
   if (retry) retry.onclick = () => {
     if (!session) return;

@@ -8,10 +8,34 @@ body:
         Keep it factual and defensible, cite a source, and be respectful: no slurs and no targeting of private individuals.
         Fill in **every** field in both languages, otherwise the question is skipped. Do not change the field labels.
   - type: input
-    id: test
+    id: quiz
     attributes:
-      label: "Test number (1-17)"
-      description: "1 Colony origins · 2 Wartime · 3 1950s–60s · 4 1970s–80s · 5 Road to 1997 · 6 June 4 · 7 Handover/early SAR · 8 Rights & rule of law · 9 2005–2018 · 10 2019 I · 11 2019 II & after · 12 Manners · 13 Culture · 14 Media & sport · 15 Festivals · 16 Everyday life I · 17 Everyday life II"
+      label: "Quiz number (1-17)"
+      description: "Which quiz should this question join? Each quiz mixes topics and has 24 questions; the top-voted questions win a place."
+    validations: { required: true }
+  - type: dropdown
+    id: topic
+    attributes:
+      label: "Topic"
+      description: "Syllabus topic (history, values, culture, everyday life…)."
+      options:
+        - colony
+        - wartime
+        - boom
+        - lionrock
+        - road1997
+        - june4
+        - handover
+        - rights
+        - vote
+        - y2019
+        - after2019
+        - manners
+        - culture
+        - media_sport
+        - festivals
+        - life_services
+        - life_work_money
     validations: { required: true }
   - type: textarea
     id: q-zh

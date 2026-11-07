@@ -6,15 +6,17 @@
 # Project
 
 - Static Vite + TypeScript quiz app (no backend), deployed to GitHub Pages.
-- 17 tests × 24 questions, bilingual (繁體中文 / English), dark/light, pass mark 18/24.
-- Questions: `src/data/tests/tNN.ts` (seed) + `src/data/community.json` (exported from Discussions).
-- Tone: cheeky cultural quiz; facts must be defensible; no slurs or attacks on individuals.
+- 17 quizzes × 24 questions, bilingual (繁體中文 / English), dark/light, pass mark 18/24.
+- `src/data/questions.csv` is the single source of truth for all questions (one row each).
+- Quizzes mix topics: columns `quiz` (1–17) and `topic` (key in `src/topics.ts`) are independent.
+- Tone: cheeky and unapologetically Hongkonger — a remembrance quiz, not politically neutral. Facts must stay accurate; no slurs or harassment of private individuals.
 
 # Unit tests
 
-- After any change run `npm test` and `npx tsc --noEmit` before reporting done.
+- After any change run `npm run check:questions`, `npm test` and `npx tsc --noEmit` before reporting done.
+- `npm run check:questions` (CI) fails unless 17 quizzes each show exactly 24 questions with 4 distinct options per language.
 - UI changes: also run `npm run build && npm run e2e` (Playwright: light/dark × desktop/mobile).
-- Question data is validated by tests (24 per test, 4 distinct options, both languages).
+- Edit questions only in the CSV (UTF-8, quoted cells); never hard-code questions in TS.
 
 # Working on a big story or epic
 
@@ -38,9 +40,12 @@
 
 # Question bank
 
-- Community questions come from GitHub Discussions (category `question-bank`, form in `.github/DISCUSSION_TEMPLATE/`).
-- `npm run export:questions` ranks by upvotes (top 24 per test, ≤ 408) into `community.json`; the weekly workflow opens a PR.
-- Don't edit field labels in the form: `src/bank.ts` parses them.
+- CSV columns: id, quiz, topic, votes, source, q_/correct_/wrong1-3_/explanation_ in `_zh` and `_en`.
+- Seed rows have empty `source`; community rows (from Discussions) have a `source` URL and are rewritten on export.
+- A quiz shows its top 24 rows by `votes` (ties: CSV order); extra rows stay as "bank only".
+- Community questions: Discussions category `question-bank` (form in `.github/DISCUSSION_TEMPLATE/`).
+- `npm run export:questions` writes top 24 per quiz into the CSV; weekly workflow opens a PR.
+- Don't edit form field labels: `src/discussions.ts` parses them.
 
 # Code structure
 

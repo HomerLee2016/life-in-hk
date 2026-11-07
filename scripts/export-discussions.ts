@@ -1,5 +1,6 @@
 /**
- * Export top-voted question proposals from GitHub Discussions into src/data/community.json.
+ * Export top-voted question proposals from GitHub Discussions into src/data/questions.csv
+ * (community rows are those with a `source` URL; they are replaced on every run, seed rows are untouched).
  *
  *   GITHUB_TOKEN=... npm run export:questions            # uses GITHUB_REPOSITORY or HomerLee2016/life-in-hk
  *   npm run export:questions -- --category question-bank --min-votes 1 --dry-run
@@ -7,8 +8,10 @@
  * Discussions must use the "Question bank" category form (.github/DISCUSSION_TEMPLATE/question-bank.yml).
  * Invalid / incomplete posts are skipped and listed so authors can fix them.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { parseDiscussion, topPerTest, type CommunityQuestion } from '../src/bank';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { mergeCommunityIntoCsv } from '../src/data/merge';
+import { parseDiscussion, topPerQuiz } from '../src/discussions';
+import type { QuestionRow } from '../src/types';
 
 const args = process.argv.slice(2);
 const fail = (msg: string): never => { console.error(msg); process.exit(1); };
@@ -35,12 +38,12 @@ const query = `query($owner:String!,$name:String!,$after:String){
   repository(owner:$owner,name:$name){
     discussions(first:100, after:$after, orderBy:{field:CREATED_AT,direction:DESC}){
       pageInfo{hasNextPage endCursor}
-      nodes{ url body upvoteCount category{slug} }
+      nodes{ number url body upvoteCount category{slug} }
     }
   }
 }`;
 
-interface Node { url: string; body: string; upvoteCount: number; category: { slug: string } }
+interface Node { number: number; url: string; body: string; upvoteCount: number; category: { slug: string } }
 
 async function fetchAll(): Promise<Node[]> {
   const all: Node[] = [];
@@ -63,18 +66,19 @@ async function fetchAll(): Promise<Node[]> {
 }
 
 const nodes = (await fetchAll()).filter((n) => n.category.slug === categorySlug);
-const valid: CommunityQuestion[] = [];
+const valid: QuestionRow[] = [];
 const skipped: string[] = [];
 for (const n of nodes) {
-  const q = parseDiscussion(n.body, n.upvoteCount, n.url);
+  const q = parseDiscussion(n.body, n.upvoteCount, n.url, `d${n.number}`);
   if (!q) skipped.push(n.url);
   else if (q.votes >= minVotes) valid.push(q);
 }
-const top = topPerTest(valid); // top 24 per test, max 408
+const top = topPerQuiz(valid); // top 24 per quiz
 console.log(`${nodes.length} discussions, ${valid.length} valid with >=${minVotes} votes, ${top.length} ${dryRun ? 'would be ' : ''}exported.`);
 if (skipped.length) console.log(`Skipped (incomplete/invalid):\n${skipped.map((u) => ` - ${u}`).join('\n')}`);
 if (!dryRun) {
-  mkdirSync(new URL('../src/data/', import.meta.url), { recursive: true });
-  writeFileSync(new URL('../src/data/community.json', import.meta.url), JSON.stringify({ generatedAt: new Date().toISOString(), questions: top }, null, 2) + '\n');
-  console.log('Wrote src/data/community.json');
+  const csvUrl = new URL('../src/data/questions.csv', import.meta.url);
+  const { csv, seed } = mergeCommunityIntoCsv(readFileSync(csvUrl, 'utf8'), top);
+  writeFileSync(csvUrl, csv);
+  console.log(`Wrote src/data/questions.csv (${seed} seed + ${top.length} community rows)`);
 }

@@ -28,11 +28,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run export:questions -- --min-votes "${{ inputs.min_votes || '1' }}"
+      - run: npm run check:questions
       - run: npm test
       - uses: peter-evans/create-pull-request@v7
         with:
           branch: bot/question-bank-export
           commit-message: Update question bank from Discussions
           title: Update question bank from Discussions
-          body: Automated export of the top-voted question proposals (see src/data/community.json).
-          add-paths: src/data/community.json
+          body: Automated export of the top-voted question proposals (see src/data/questions.csv).
+          add-paths: src/data/questions.csv

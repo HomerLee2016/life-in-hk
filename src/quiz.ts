@@ -1,20 +1,8 @@
-import type { Lang, QuizTest, RawTest, Txt } from './types';
+import { PASS_MARK, QUESTIONS_PER_QUIZ, QUIZ_COUNT } from './constants';
+import type { Lang, QuizTest, Txt } from './types';
 
-export const QUESTIONS_PER_TEST = 24;
-export const PASS_MARK = 18; // 75%
+export { PASS_MARK, QUESTIONS_PER_QUIZ, QUIZ_COUNT };
 
-export function defineTest(raw: RawTest): QuizTest {
-  return {
-    id: raw.id,
-    title: raw.title,
-    blurb: raw.blurb,
-    questions: raw.qs.map(([question, correct, wrong, explanation]) => ({
-      question,
-      options: [correct, ...wrong],
-      explanation,
-    })),
-  };
-}
 
 export function t(txt: Txt, lang: Lang): string {
   return typeof txt === 'string' ? txt : txt[lang === 'zh' ? 0 : 1];
@@ -39,7 +27,8 @@ export interface Session {
   current: number;
 }
 
-export function startSession(test: QuizTest, rng: () => number = Math.random): Session {
+export function startSession(source: QuizTest, rng: () => number = Math.random): Session {
+  const test: QuizTest = { ...source, questions: shuffle(source.questions, rng) }; // fresh question order every attempt
   return {
     test,
     order: test.questions.map((q) => shuffle(q.options.map((_, i) => i), rng)),
@@ -96,7 +85,7 @@ export function sanitizeBests(raw: unknown): Bests {
   if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return out;
   for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
     const id = Number(k);
-    if (Number.isInteger(id) && id >= 1 && id <= 17 && typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= QUESTIONS_PER_TEST) out[id] = v;
+    if (Number.isInteger(id) && id >= 1 && id <= QUIZ_COUNT && typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= QUESTIONS_PER_QUIZ) out[id] = v;
   }
   return out;
 }

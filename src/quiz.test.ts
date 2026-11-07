@@ -3,7 +3,7 @@ import {
   PASS_MARK, answer, answeredCount, detectLang, detectTheme, hasPassed, isFinished, recordBest,
   score, shuffle, startSession, t, verdict, wrongQuestions,
 } from './quiz';
-import { tests } from './data';
+import { tests } from './data/questions';
 
 const seeded = (seed = 1) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
 
@@ -40,6 +40,13 @@ describe('session', () => {
     const s = startSession(test, seeded(7));
     s.order.forEach((o) => expect([...o].sort()).toEqual([0, 1, 2, 3]));
     expect(s.order.some((o) => o[0] !== 0)).toBe(true);
+  });
+  it('shuffles question order per attempt but keeps the same 24 questions', () => {
+    const a = startSession(test, seeded(3));
+    const ids = (s: typeof a) => s.test.questions.map((x) => x.id);
+    expect([...ids(a)].sort()).toEqual(test.questions.map((x) => x.id).sort());
+    expect(ids(a)).not.toEqual(test.questions.map((x) => x.id));
+    expect(ids(startSession(test, seeded(4)))).not.toEqual(ids(a));
   });
   it('pass mark is 18 of 24', () => {
     const s = startSession(test, seeded());
