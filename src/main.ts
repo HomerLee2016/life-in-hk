@@ -4,10 +4,10 @@ import { TOPICS, topicName } from './topics';
 import { tr } from './i18n';
 import {
   PASS_MARK, QUESTIONS_PER_QUIZ, answer, detectLang, detectTheme, hasPassed,
-  load, recordBest, sanitizeBests, isFinished, save, score, startSession, t, verdict, wrongQuestions,
-  type Bests, type Session,
+  load, recordAnswer, recordBest, sanitizeBests, sanitizeStats, statTotals, isFinished, save, score, startSession, t, verdict, wrongQuestions,
+  type Bests, type Session, type Stats,
 } from './quiz';
-import type { Lang, QuizTest, Theme } from './types';
+import type { Lang, Theme } from './types';
 
 const REPO = 'https://github.com/HomerLee2016/life-in-hk';
 const DISCUSSIONS = `${REPO}/discussions`;
@@ -21,6 +21,7 @@ const put = (k: string, v: string) => {
 
 let lang: Lang = detectLang(navigator.language, store('lih.lang'));
 let theme: Theme = detectTheme(matchMedia('(prefers-color-scheme: dark)').matches, store('lih.theme'));
+let stats: Stats = sanitizeStats(load<unknown>('lih.stats', {}));
 let bests: Bests = sanitizeBests(load<unknown>('lih.bests', {}));
 let session: Session | null = null;
 let showResult = false;
@@ -51,7 +52,7 @@ function header(active: 'tests' | 'questions' | 'contact'): string {
   const nextTheme = theme === 'dark' ? tr('themeToLight', lang) : tr('themeToDark', lang);
   return `
   <header class="top">
-    <div class="brand"><span class="logo" aria-hidden="true">🏮</span>
+    <div class="brand">
       <div><h1>${esc(tr('appTitle', lang))}</h1><p class="tag">${esc(tr('tagline', lang))}</p></div></div>
     <div class="tools">
       <button id="lang" class="chip" aria-label="${esc(tr('langAria', lang))}">${esc(tr('langBtn', lang))}</button>
@@ -75,10 +76,16 @@ function testsPage(): string {
     return `<a class="card" href="#/tests/${x.id}" data-test="${x.id}">
       <span class="num">${x.id}</span>
       <h3>${esc(tr('quizN', lang, { n: x.id }))}</h3>
-      <p>${esc(tr('quizBlurb', lang))}</p>
       <div class="meta"><span>${esc(tr('questionsN', lang))}</span>${badge}</div></a>`;
   }).join('');
-  return `<p class="intro">${esc(tr('intro', lang))}</p><section class="grid">${cards}</section>
+  const tot = statTotals(stats);
+  const tracker = `<section class="panel tracker" id="tracker" aria-label="${esc(tr('statsTitle', lang))}"><h2>${esc(tr('statsTitle', lang))}</h2>${
+    tot.pct === null ? `<p class="note">${esc(tr('statsEmpty', lang))}</p>` : `<p class="tally">
+      <span class="t-ok" id="stat-correct">✓ ${esc(tr('statsCorrect', lang))} <b>${tot.correct}</b></span>
+      <span class="t-bad" id="stat-wrong">✗ ${esc(tr('statsWrong', lang))} <b>${tot.wrong}</b></span>
+      <span id="stat-acc">${esc(tr('statsAcc', lang))} <b>${tot.pct}%</b></span>
+      <button class="btn ghost" id="stats-reset">${esc(tr('statsReset', lang))}</button></p>`}</section>`;
+  return `<p class="intro">${esc(tr('intro', lang))}</p>${tracker}<section class="grid">${cards}</section>
     <p class="note"><a id="footer-discussions" href="${DISCUSSIONS}" target="_blank" rel="noopener">${esc(tr('contribute', lang))} ↗</a> · ${esc(tr('disclaimer', lang))}</p>`;
 }
 
@@ -94,6 +101,11 @@ function contactPage(): string {
 
 // ---- All questions (review table) ----
 const filters = { search: '', quiz: '', topic: '' };
+
+function mineCell(id: string): string {
+  const v = stats[id];
+  return v ? `<span class="t-ok">✓ ${v.c}</span> <span class="t-bad">✗ ${v.w}</span>` : '—';
+}
 
 function questionRows(): string {
   const term = filters.search.trim().toLowerCase();
@@ -112,10 +124,11 @@ function questionRows(): string {
     <td data-label="${esc(tr('colQuestion', lang))}" class="qcell">${esc(r.question[i])}</td>
     <td data-label="${esc(tr('colCorrect', lang))}" class="ok-t">${esc(r.correct[i])}</td>
     <td data-label="${esc(tr('colWrong', lang))}">${r.wrong.map((w) => esc(w[i])).join(' · ')}</td>
+    <td data-label="${esc(tr('colMine', lang))}" class="mine">${mineCell(r.id)}</td>
     <td data-label="${esc(tr('colExplanation', lang))}" class="why">${esc(r.explanation[i])}</td></tr>`).join('');
   return `<p class="note" id="qcount" role="status">${esc(tr('qShowing', lang, { n: matches.length, total: allRows.length }))}</p>
     ${matches.length === 0 ? `<p>${esc(tr('noMatches', lang))}</p>` : `<div class="tablewrap"><table class="qtable" id="qtable"><thead><tr>
-      ${(['colId', 'colQuiz', 'colTopic', 'colQuestion', 'colCorrect', 'colWrong', 'colExplanation'] as const).map((k) => `<th>${esc(tr(k, lang))}</th>`).join('')}
+      ${(['colId', 'colQuiz', 'colTopic', 'colQuestion', 'colCorrect', 'colWrong', 'colMine', 'colExplanation'] as const).map((k) => `<th>${esc(tr(k, lang))}</th>`).join('')}
     </tr></thead><tbody>${rows}</tbody></table></div>`}`;
 }
 
@@ -135,8 +148,9 @@ function optionLabel(s: Session, q: number, src: number): string {
   return t(s.test.questions[q].options[src], lang);
 }
 
-function quizPage(test: QuizTest): string {
+function quizPage(): string {
   const s = session!;
+  const test = s.test; // the shuffled copy: question order and option order must come from the same session
   const back = `<a class="back" href="#/tests">${esc(tr('back', lang))}</a>`;
   const title = `<h2 class="qt">${esc(tr('quizN', lang, { n: test.id }))}</h2>`;
   if (showResult) return back + title + resultView(s);
@@ -149,10 +163,10 @@ function quizPage(test: QuizTest): string {
     let cls = 'opt';
     if (done) cls += src === 0 ? ' right' : src === picked ? ' bad' : ' dim';
     return `<button class="${cls}" data-opt="${src}" ${done ? 'disabled' : ''}>
-      <span class="key">${'ABCD'[pos]}</span><span>${esc(optionLabel(s, qi, src))}</span></button>`;
+      <span class="key">${'ABCD'[pos]}</span><span>${esc(optionLabel(s, qi, src))}</span>${done && src === 0 ? '<span class="mark" aria-hidden="true">✓</span>' : done && src === picked ? '<span class="mark" aria-hidden="true">✗</span>' : ''}</button>`;
   }).join('');
   const feedback = done ? `<div class="feedback ${picked === 0 ? 'ok' : 'no'}" role="status">
-      <strong>${esc(tr(picked === 0 ? 'correct' : 'wrong', lang))}</strong>
+      <strong>${picked === 0 ? '✓ ' : '✗ '}${esc(tr(picked === 0 ? 'correct' : 'wrong', lang))}</strong>
       ${picked === 0 ? '' : `<div>${esc(tr('rightAnswerWas', lang))}${esc(optionLabel(s, qi, 0))}</div>`}
       <p>${esc(t(q.explanation, lang))}</p>
       <button id="next" class="btn">${esc(tr(qi === test.questions.length - 1 ? 'seeResult' : 'next', lang))}</button></div>` : '';
@@ -194,7 +208,7 @@ function render() {
   if (r.page === 'quiz') {
     const test = tests.find((x) => x.id === r.id)!;
     if (!session || session.test.id !== test.id) { session = startSession(test); showResult = false; }
-    body = quizPage(test);
+    body = quizPage();
   } else {
     session = null; showResult = false;
     body = r.page === 'contact' ? contactPage() : r.page === 'questions' ? questionsPage() : testsPage();
@@ -221,7 +235,12 @@ function wire() {
   app.querySelectorAll<HTMLButtonElement>('button.opt').forEach((b) => {
     b.onclick = () => {
       if (!session) return;
-      answer(session, session.current, Number(b.dataset.opt));
+      const wasOpen = session.picked[session.current] === null;
+      const ok = answer(session, session.current, Number(b.dataset.opt));
+      if (wasOpen && session.picked[session.current] !== null) {
+        stats = recordAnswer(sanitizeStats(load<unknown>('lih.stats', {})), session.test.questions[session.current].id, ok);
+        save('lih.stats', stats);
+      }
       if (isFinished(session)) {
         bests = recordBest(sanitizeBests(load<unknown>('lih.bests', {})), session.test.id, score(session));
         save('lih.bests', bests);
@@ -238,6 +257,11 @@ function wire() {
     } else session.current++;
     render();
     window.scrollTo({ top: 0 });
+  };
+  const reset = document.getElementById('stats-reset');
+  if (reset) reset.onclick = () => {
+    if (!window.confirm(tr('statsConfirm', lang))) return;
+    stats = {}; save('lih.stats', stats); render();
   };
   const results = document.getElementById('qresults');
   if (results) {

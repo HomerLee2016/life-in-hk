@@ -1,11 +1,15 @@
 :root {
-  --bg: #faf7f2; --surface: #fff; --text: #1d1b1a; --muted: #6a625c; --border: #e4ddd3;
-  --accent: #c8102e; --accent-fg: #fff; --ok: #137a3e; --ok-bg: #e4f5ea; --bad: #b3261e; --bad-bg: #fde9e7;
-  --shadow: 0 1px 3px rgba(0,0,0,.08);
+  --bg: #f2f6fc; --surface: #ffffff; --text: #0e1a2e; --muted: #53647d; --border: #d3deee;
+  --accent: #1d4ed8; --accent-fg: #ffffff;
+  --ok: #0b7a6f; --ok-bg: #dcf5f1;
+  --bad: #9c0006; --bad-bg: #ffc7ce; /* Excel-style wrong: dark red on light red */
+  --shadow: 0 1px 3px rgba(15,40,90,.10);
 }
 :root[data-theme='dark'] {
-  --bg: #121212; --surface: #1d1d1f; --text: #f0ece6; --muted: #a79f97; --border: #35332f;
-  --accent: #ff4d63; --accent-fg: #1a0a0d; --ok: #62d68b; --ok-bg: #12301f; --bad: #ff8a80; --bad-bg: #3a1815;
+  --bg: #08111f; --surface: #101c31; --text: #e7effc; --muted: #93a6c4; --border: #22344f;
+  --accent: #5b9bff; --accent-fg: #06101f;
+  --ok: #5eead4; --ok-bg: #0b2e2d;
+  --bad: #ff9aa2; --bad-bg: #4a1519;
   --shadow: none;
 }
 * { box-sizing: border-box; }
@@ -18,7 +22,6 @@ body {
 a { color: var(--accent); }
 .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0 8px; flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.logo { font-size: 2rem; }
 h1 { margin: 0; font-size: 1.35rem; }
 .tag { margin: 0; color: var(--muted); font-size: .9rem; }
 .tools { display: flex; gap: 8px; }
@@ -105,3 +108,13 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   .qtable td::before { content: attr(data-label) ': '; color: var(--muted); font-size: .75rem; }
   .qtable .qcell { min-width: 0; }
 }
+
+.opt .mark { margin-left: auto; font-weight: 700; flex: none; }
+.opt.right .key, .opt.bad .key { border-color: currentColor; }
+.opt.bad { border-style: dashed; } /* wrong answers are also marked by a dashed border and ✗, not by colour alone */
+
+.tracker { max-width: none; margin: 0 0 16px; padding: 14px 18px; }
+.tracker h2 { font-size: 1rem; margin: 0 0 8px; }
+.tally { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin: 0; }
+.tally .btn { margin-left: auto; }
+.t-ok { color: var(--ok); } .t-bad { color: var(--bad); }
